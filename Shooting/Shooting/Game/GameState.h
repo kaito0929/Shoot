@@ -13,16 +13,13 @@
 #include "../Scene/ISceneChanger.h"
 #include "../Scene/BaseScene.h"
 
+#include "Player.h"
+
 class GameState
 {
 private:
 
-	Mesh Player;
-
-	Camera camera;
-
-	//メッシュに渡す行列を作成
-	D3DXMATRIXA16 mat_transform, mat_scale, mat_rotate;
+	Player player;
 
 public:
 	//コンストラクタ

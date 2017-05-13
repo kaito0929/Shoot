@@ -157,6 +157,7 @@
     <ClCompile Include="directInput.cpp" />
     <ClCompile Include="DirectSound.cpp" />
     <ClCompile Include="Game\GameState.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="Scene\BaseScene.cpp" />
     <ClCompile Include="Scene\ISceneChanger.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="directInput.h" />
     <ClInclude Include="DirectSound.h" />
     <ClInclude Include="Game\GameState.h" />
+    <ClInclude Include="Game\Player.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="MyVector.h" />
     <ClInclude Include="Scene\BaseScene.h" />
