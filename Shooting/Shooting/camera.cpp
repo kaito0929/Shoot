@@ -7,6 +7,7 @@ Camera::Camera()
 
 	lookAtPoint = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 	relLookAtPoint = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+
 	absLookAtPoint = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	upVec = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -191,3 +192,4 @@ void Camera::Rotate(float radYaw, float radPitch)
 		relLookAtPoint = D3DXVECTOR3(resultX, resultY, resultZ);
 	}
 }
+

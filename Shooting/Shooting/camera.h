@@ -23,6 +23,8 @@ private:
 
 	CAMERA_MODE cameraMode;		//’‹“_w’è•û–@
 
+	D3DXMATRIXA16 m_LocalMat;
+
 public:
 	Camera();
 	~Camera();

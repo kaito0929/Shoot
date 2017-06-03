@@ -8,6 +8,7 @@
 #include "../DirectSound.h"
 #include "../SoundBuffer.h"
 #include "../camera.h"
+#include "../BoundingBox.h"
 
 class Player
 {
@@ -15,21 +16,34 @@ private:
 
 	//プレイヤーのモデル
 	Mesh PlayerModel;
-	//弾のモデル
-	Mesh Bullet;
-
-	Camera camera;
-
+	
 	//メッシュに渡す行列を作成
 	D3DXMATRIXA16 mat_transform, mat_scale, mat_rotate;
-	//メッシュに渡す行列を作成
-	D3DXMATRIXA16 mat_transform2, mat_scale2, mat_rotate2;
 
 	//プレイヤーの位置
 	D3DXVECTOR3 PlayerPos;
+	//プレイヤーの向き
+	D3DXVECTOR3 PlayerAngle;
+	//プレイヤーの速さ
+	D3DXVECTOR3 PlayerSpeed;
+
+	//各方向のベクトル
+	D3DXVECTOR3 forward;
+	D3DXVECTOR3 right;
+	D3DXVECTOR3 up;
+
+	D3DXVECTOR3 rotate;
+
+	//カメラ操作
+	Camera camera;
 	//カメラの位置
 	D3DXVECTOR3 CameraPos;
+	//カメラの位置
+	D3DXVECTOR3 CameraRel;
 
+
+	//当たり判定
+	OrientedBoundingBox obb;
 
 public:
 
@@ -45,7 +59,10 @@ public:
 	//描画
 	void Draw();
 
-	//プレイヤーの弾の発射
-	void BulletShot();
+
+	void CameraControl();
+
+	OrientedBoundingBox* GetObb() { return &obb; }
+
 
 };

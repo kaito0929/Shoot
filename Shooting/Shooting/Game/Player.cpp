@@ -8,10 +8,28 @@
 #include <stdio.h>
 #include <stdlib.h>	//rand()関数用
 #include <time.h>	//time()関数用
+#include <math.h>
+
 
 Player::Player()
 {
+	rotate.x = rotate.y = rotate.z;
+		
+	forward.x = cos(D3DX_PI / 2);
+	forward.z = sin(D3DX_PI / 2);
+	forward.y = 0;
 
+	right.x = cos(0);
+	right.z = sin(0);
+	right.y = 0;
+
+	up.x = 0;
+	up.z = 0;
+	up.y = 1;
+
+
+	obb.SetLength(20, 10, 10);
+	obb.UpdateInfo(PlayerPos, forward, right, up);
 }
 
 Player::~Player()
@@ -22,66 +40,111 @@ Player::~Player()
 void Player::Initialize()
 {
 	PlayerModel.Load(_T("Model/Player.x"));
-	Bullet.Load(_T("Model/Bullet.x"));
 
 	PlayerPos.x = 0.0f;
-	PlayerPos.y = 0.0f;
+	PlayerPos.y = 30.0f;
 	PlayerPos.z = 0.0f;
+
+	PlayerAngle.x = 0.0f;
+	PlayerAngle.y = 0.0f;
+	PlayerAngle.z = 0.0f;
+
+	PlayerSpeed.x = 0.5f;
+	PlayerSpeed.y = 0.5f;
+	PlayerSpeed.z = 0.5f;
+
 	CameraPos.x = 0.0f;
-	CameraPos.y = 60.0f;
+	CameraPos.y = 40.0f;
 	CameraPos.z = -60.0f;
 
+	CameraRel.x = 0.0f;
+	CameraRel.y = -2.0f;
+	CameraRel.z = 10.0f;
+
 	camera.SetEyePoint(CameraPos);
-	camera.SetRelLookAtPoint(0.0f, -10.0f, 1.0f);
+	camera.SetRelLookAtPoint(CameraRel);
+
 }
 
 void Player::Draw()
 {
-	D3DXMatrixTranslation(&mat_transform, PlayerPos.x, 0.0f, PlayerPos.z);	//座標
-	D3DXMatrixScaling(&mat_scale, 0.1f, 0.1f, 0.1f);		//拡大
-	D3DXMatrixRotationY(&mat_rotate, 0);					//回転　（y軸中心）
-
-	D3DXMatrixTranslation(&mat_transform2, 0.0f, 0.0f, 0.0f);	//座標
-	D3DXMatrixScaling(&mat_scale2, 0.1f, 0.1f, 0.1f);		//拡大
-	D3DXMatrixRotationY(&mat_rotate2, 0);					//回転　（y軸中心）
+	D3DXMatrixTranslation(&mat_transform, PlayerPos.x, PlayerPos.y, PlayerPos.z);	//座標
+	D3DXMatrixScaling(&mat_scale, 0.1f, 0.1f, 0.1f);								//拡大
+	D3DXMatrixRotationYawPitchRoll(&mat_rotate,PlayerAngle.x, PlayerAngle.y, PlayerAngle.z);//回転
 
 	PlayerModel.Draw(mat_transform, mat_scale, mat_rotate);
-	Bullet.Draw(mat_transform2, mat_scale2, mat_rotate2);
+
+	obb.DrawLine();
 }
 
 void Player::Update()
 {
 	DirectInput* pDi = DirectInput::GetInstance();
 
-	CameraPos.x = PlayerPos.x;
-	CameraPos.z = PlayerPos.z - 60.0f;
+
+	obb.UpdateInfo(PlayerPos, forward, right, up);
+
+	PlayerPos.x += sin(PlayerAngle.x)*PlayerSpeed.x;
+	PlayerPos.y += sin(-PlayerAngle.y)*PlayerSpeed.y;
+	PlayerPos.z += cos(PlayerAngle.z)*PlayerSpeed.z;
 
 
 	if (pDi->KeyCount(DIK_UP))
 	{
-		PlayerPos.z += 1.0;
+		PlayerAngle.y += 0.1f;
+
+		if (PlayerAngle.y >= 1.0f)
+		{
+			PlayerAngle.y = 1.0f;
+		}
 	}
 	if (pDi->KeyCount(DIK_DOWN))
 	{
-		PlayerPos.z -= 1.0;
+		PlayerAngle.y -= 0.1f;
+		if (PlayerAngle.y <= -1.0f)
+		{
+			PlayerAngle.y = -1.0f;
+		}
+	}
+
+	if (pDi->KeyCount(DIK_LEFT))
+	{
+		PlayerAngle.z -= 0.1f;
+		PlayerAngle.x -= 0.1f;
+		if (PlayerAngle.z <= -3.0f&&PlayerAngle.x <= -3.0f)
+		{
+			PlayerAngle.z = -3.0f;
+			PlayerAngle.x = -3.0f;
+		}
 	}
 	if (pDi->KeyCount(DIK_RIGHT))
 	{
-		PlayerPos.x += 1.0;
-	}
-	if (pDi->KeyCount(DIK_LEFT))
-	{
-		PlayerPos.x -= 1.0;
+		PlayerAngle.z += 0.1f;
+		PlayerAngle.x += 0.1f;
+		if (PlayerAngle.z >= 3.0f&&PlayerAngle.x >= 3.0f)
+		{
+			PlayerAngle.z = 3.0f;
+			PlayerAngle.x = 3.0f;
+		}
 	}
 
-	camera.SetEyePoint(CameraPos);
+	CameraControl();
 
-	camera.Move(0.0f, 0.0f);
-	camera.Rotate(0.0f, 0.0f);
-	camera.UpdateViewMatrix();
 }
 
-void Player::BulletShot()
+void Player::CameraControl()
 {
-	DirectInput* pDi = DirectInput::GetInstance();
+	CameraPos.x = PlayerPos.x + sin(PlayerAngle.x)*-60.0f;
+	CameraPos.y = PlayerPos.y + sin(-PlayerAngle.y)*-60.0f;
+	CameraPos.z = PlayerPos.z + cos(PlayerAngle.z)*-60.0f;
+	
+
+	CameraRel.x = sin(PlayerAngle.x)*60.0f;
+	CameraRel.y = sin(-PlayerAngle.y)*60.0f;
+	CameraRel.z = cos(PlayerAngle.z)*60.0f;
+
+	camera.SetEyePoint(CameraPos);
+	camera.SetRelLookAtPoint(CameraRel);	
+
+	camera.UpdateViewMatrix();
 }
