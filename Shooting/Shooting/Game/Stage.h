@@ -10,26 +10,29 @@
 #include "../camera.h"
 #include "../BoundingBox.h"
 
-#include "../Scene/SceneManager.h"
-#include "../Scene/ISceneChanger.h"
-#include "../Scene/BaseScene.h"
 
-#include "Player.h"
-#include "Stage.h"
-
-class GameState
+class Stage
 {
 private:
 
-	Player player;
+	//背景
+	Mesh BackGround;
+	//メッシュに渡す行列を作成
+	D3DXMATRIXA16 mat_transform, mat_scale, mat_rotate;
 
-	Stage stage;
+	OrientedBoundingBox obb;
+
+	//各方向のベクトル
+	D3DXVECTOR3 forward;
+	D3DXVECTOR3 right;
+	D3DXVECTOR3 up;
+
+	D3DXVECTOR3 pos;
 
 public:
-	//コンストラクタ
-	GameState();
-	//デストラクタ
-	~GameState();			
+
+	Stage();
+	~Stage();
 
 	//初期化
 	void Initialize();
@@ -38,5 +41,6 @@ public:
 	//描画
 	void Draw();
 
-	
+	OrientedBoundingBox* GetObb() { return &obb; }
+
 };

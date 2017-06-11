@@ -10,6 +10,20 @@
 #include "../camera.h"
 #include "../BoundingBox.h"
 
+#include "Stage.h"
+
+#define PLAYER_SPEED 0.5f			//自機の移動速度
+#define PLAYERANGLE_CHANGENUM 0.1f	//自機の向きを変える時の数値
+
+#define PLAYERANGLE_UPMAX -1.0f		//自機の向ける上方向の最大値
+#define PLAYERANGLE_DOWNMAX 1.0f	//自機の向ける下方向の最大値
+#define PLAYERANGLE_LEFTMAX -3.0f	//自機の向ける左方向の最大値
+#define PLAYERANGLE_RIGHTMAX 3.0f	//自機の向ける右方向の最大値
+
+#define CAMERA_RADIUS_PLUS 60.0f
+#define CAMERA_RADIUS_MINUS -60.0f
+
+
 class Player
 {
 private:
@@ -24,15 +38,12 @@ private:
 	D3DXVECTOR3 PlayerPos;
 	//プレイヤーの向き
 	D3DXVECTOR3 PlayerAngle;
-	//プレイヤーの速さ
-	D3DXVECTOR3 PlayerSpeed;
 
 	//各方向のベクトル
 	D3DXVECTOR3 forward;
 	D3DXVECTOR3 right;
 	D3DXVECTOR3 up;
 
-	D3DXVECTOR3 rotate;
 
 	//カメラ操作
 	Camera camera;
@@ -41,9 +52,25 @@ private:
 	//カメラの位置
 	D3DXVECTOR3 CameraRel;
 
-
 	//当たり判定
 	OrientedBoundingBox obb;
+
+	bool ShotFlag;
+
+	Mesh Bullet;
+
+	D3DXVECTOR3 BulletPos;
+
+	D3DXVECTOR3 BulletAngle;
+
+	OrientedBoundingBox bulletObb;
+
+	//各方向のベクトル
+	D3DXVECTOR3 forward2;
+	D3DXVECTOR3 right2;
+	D3DXVECTOR3 up2;
+
+	Stage stage;
 
 public:
 
@@ -59,10 +86,17 @@ public:
 	//描画
 	void Draw();
 
+	//プレイヤーの移動の制御
+	void PlayerMoveControl();
 
+	//弾の生成関数
+	void BulletShot();
+
+	//カメラの動きの制御
 	void CameraControl();
 
-	OrientedBoundingBox* GetObb() { return &obb; }
+	//プレイヤーの当たり判定の動き
+	void PlayerObbUpdate();
 
 
 };
