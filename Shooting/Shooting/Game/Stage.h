@@ -20,14 +20,13 @@ private:
 	//メッシュに渡す行列を作成
 	D3DXMATRIXA16 mat_transform, mat_scale, mat_rotate;
 
-	OrientedBoundingBox obb;
 
 	//各方向のベクトル
-	D3DXVECTOR3 forward;
-	D3DXVECTOR3 right;
-	D3DXVECTOR3 up;
+	D3DXVECTOR3 forward[6];
+	D3DXVECTOR3 right[6];
+	D3DXVECTOR3 up[6];
 
-	D3DXVECTOR3 pos;
+	D3DXVECTOR3 pos[6];
 
 public:
 
@@ -41,6 +40,8 @@ public:
 	//描画
 	void Draw();
 
-	OrientedBoundingBox* GetObb() { return &obb; }
+
+	OrientedBoundingBox obb[6];
+
 
 };

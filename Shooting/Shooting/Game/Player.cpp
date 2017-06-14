@@ -34,6 +34,7 @@ Player::~Player()
 
 }
 
+//èâä˙âªä÷êî
 void Player::Initialize()
 {
 	PlayerModel.Load(_T("Model/Player.x"));
@@ -78,6 +79,7 @@ void Player::Initialize()
 	stage.Initialize();
 }
 
+//ï`âÊä÷êî
 void Player::Draw()
 {
 	D3DXMatrixTranslation(&mat_transform, PlayerPos.x, PlayerPos.y, PlayerPos.z);	//ç¿ïW
@@ -89,11 +91,10 @@ void Player::Draw()
 	if (ShotFlag == true)
 	{
 		BulletShot();
+		bulletObb.DrawLine();
 	}
 
 	obb.DrawLine();
-
-	bulletObb.DrawLine();
 	stage.Draw();
 }
 
@@ -110,6 +111,18 @@ void Player::Update()
 		BulletPos.x += sin(BulletAngle.x)*0.5f;
 		BulletPos.y += sin(-BulletAngle.y)*0.5f;
 		BulletPos.z += cos(BulletAngle.z)*0.5f;
+
+		//ê≥ñ 	
+		forward2.x = cos(-BulletAngle.x + (D3DX_PI / 2));
+		forward2.y = cos(BulletAngle.y + (D3DX_PI / 2));
+		forward2.z = sin(-BulletAngle.z + (D3DX_PI / 2));
+
+		//âEë§
+		right2.x = cos(-BulletAngle.x);
+		right2.y = 0;
+		right2.z = sin(-BulletAngle.z);
+
+		bulletObb.UpdateInfo(BulletPos, forward2, right2, up2);
 	}
 	else
 	{
@@ -123,21 +136,14 @@ void Player::Update()
 		BulletPos.z = PlayerPos.z + cos(BulletAngle.z)*30.0f;
 	}
 
-	//ê≥ñ 	
-	forward2.x = cos(-BulletAngle.x + (D3DX_PI / 2));
-	forward2.y = cos(BulletAngle.y + (D3DX_PI / 2));
-	forward2.z = sin(-BulletAngle.z + (D3DX_PI / 2));
+	
 
-	//âEë§
-	right2.x = cos(-BulletAngle.x);
-	right2.y = 0;
-	right2.z = sin(-BulletAngle.z);
-
-	bulletObb.UpdateInfo(BulletPos, forward2, right2, up2);
-
-	if (OrientedBoundingBox::Collision(bulletObb, *(stage.GetObb())))
+	for (int i = 0; i < 6; i++)
 	{
-		ShotFlag = false;
+		if (OrientedBoundingBox::Collision(bulletObb, stage.obb[i]))
+		{
+			ShotFlag = false;
+		}
 	}
 
 }
