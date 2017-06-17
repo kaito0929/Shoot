@@ -1,6 +1,6 @@
-//#include "ISceneChanger.h"
-//
-//ISceneChanger::~ISceneChanger()
-//{
-//
-//}
+#include "ISceneChanger.h"
+
+ISceneChanger::~ISceneChanger()
+{
+
+}

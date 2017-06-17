@@ -17,7 +17,7 @@
 #include "Player.h"
 #include "Stage.h"
 
-class GameState
+class GameState : public BaseScene
 {
 private:
 
@@ -27,16 +27,16 @@ private:
 
 public:
 	//コンストラクタ
-	GameState();
+	GameState::GameState(ISceneChanger* changer);
 	//デストラクタ
 	~GameState();			
 
 	//初期化
-	void Initialize();
+	void Initialize() override;
 	//実際の動き
-	void Update();
+	void Update() override;
 	//描画
-	void Draw();
+	void Draw() override;
 
 	
 };

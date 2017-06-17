@@ -11,6 +11,8 @@
 #include "../BoundingBox.h"
 
 #include "Stage.h"
+#include "Target.h"
+#include "Shot.h"
 
 #define PLAYER_SPEED 0.5f			//自機の移動速度
 #define PLAYERANGLE_CHANGENUM 0.1f	//自機の向きを変える時の数値
@@ -39,6 +41,10 @@ private:
 	//プレイヤーの向き
 	D3DXVECTOR3 PlayerAngle;
 
+
+	//プレイヤーの当たり判定
+	OrientedBoundingBox PlayerObb;
+
 	//各方向のベクトル
 	D3DXVECTOR3 forward;
 	D3DXVECTOR3 right;
@@ -52,25 +58,16 @@ private:
 	//カメラの位置
 	D3DXVECTOR3 CameraRel;
 
-	//当たり判定
-	OrientedBoundingBox obb;
+	//プレイヤーの生存フラグ
+	bool PlayerAliveFlag;
 
+	//弾発射のフラグ
 	bool ShotFlag;
 
-	Mesh Bullet;
-
-	D3DXVECTOR3 BulletPos;
-
-	D3DXVECTOR3 BulletAngle;
-
-	OrientedBoundingBox bulletObb;
-
-	//各方向のベクトル
-	D3DXVECTOR3 forward2;
-	D3DXVECTOR3 right2;
-	D3DXVECTOR3 up2;
 
 	Stage stage;
+	Target target;
+	Shot shot;
 
 public:
 
@@ -88,9 +85,6 @@ public:
 
 	//プレイヤーの移動の制御
 	void PlayerMoveControl();
-
-	//弾の生成関数
-	void BulletShot();
 
 	//カメラの動きの制御
 	void CameraControl();

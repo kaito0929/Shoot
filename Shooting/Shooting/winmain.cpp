@@ -121,7 +121,7 @@ HRESULT MakeWindow(HINSTANCE hInstance,HWND & refHWnd,int Width =800,int Height=
 	hWnd = CreateWindowEx
 		(0,						//ウィンドウ拡張スタイル
 		WC_BASIC,				//先に作ったウィンドウクラスの設定
-		_T("にゃんこWARS"),			//ウィンドウのタイトル
+		_T("ハコニワシュート"), //ウィンドウのタイトル
 		WS_OVERLAPPEDWINDOW,	//ウィンドウスタイル
 		CW_USEDEFAULT,			//位置x座標
 		CW_USEDEFAULT,			//位置y座標
@@ -161,7 +161,7 @@ int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	HWND hWnd=NULL;
 
-	if (FAILED(MakeWindow(hInstance,hWnd, 1200, 1000)))
+	if (FAILED(MakeWindow(hInstance,hWnd, 1200, 900)))
 	{
 		return 0;
 	}
@@ -195,8 +195,8 @@ int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	Camera camera;
 
-	GameState gameState;
-	gameState.Initialize();
+	SceneManager scenemanager;
+	scenemanager.Initialize();
 
 	MSG msg = {};
 
@@ -226,7 +226,7 @@ int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			
 			pDi->Update();
 
-			gameState.Update();
+			scenemanager.Update();
 			
 			//描画処理
 			//コマ落ちさせる場合は処理を飛ばすことがある
@@ -237,7 +237,7 @@ int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				//ビュー行列の更新
 				//camera.UpdateViewMatrix();
 
-				gameState.Draw();
+				scenemanager.Draw();
 
 				pDirect3d->EndScene();
 				pDirect3d->Present();

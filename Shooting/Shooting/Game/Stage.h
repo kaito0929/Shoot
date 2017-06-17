@@ -10,6 +10,7 @@
 #include "../camera.h"
 #include "../BoundingBox.h"
 
+#define STAGE_COLLNUM 6
 
 class Stage
 {
@@ -21,12 +22,16 @@ private:
 	D3DXMATRIXA16 mat_transform, mat_scale, mat_rotate;
 
 
-	//各方向のベクトル
-	D3DXVECTOR3 forward[6];
-	D3DXVECTOR3 right[6];
-	D3DXVECTOR3 up[6];
+	//ステージのモデルの当たり判定
+	OrientedBoundingBox StageObb[STAGE_COLLNUM];
 
-	D3DXVECTOR3 pos[6];
+	//各方向のベクトル
+	D3DXVECTOR3 forward[STAGE_COLLNUM];
+	D3DXVECTOR3 right[STAGE_COLLNUM];
+	D3DXVECTOR3 up[STAGE_COLLNUM];
+
+	//当たり判定の場所
+	D3DXVECTOR3 pos[STAGE_COLLNUM];
 
 public:
 
@@ -41,7 +46,8 @@ public:
 	void Draw();
 
 
-	OrientedBoundingBox obb[6];
+	//ステージとの当たり判定を行う関数
+	bool StageCollision(OrientedBoundingBox obb);
 
 
 };

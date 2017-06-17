@@ -9,7 +9,7 @@
 #include <stdlib.h>	//rand()ŠÖ”—p
 #include <time.h>	//time()ŠÖ”—p
 
-GameState::GameState()
+GameState::GameState(ISceneChanger* changer) : BaseScene(changer)
 {
 	
 }
@@ -21,19 +21,16 @@ GameState::~GameState()
 //‰Šú‰»ŠÖ”
 void GameState::Initialize()
 {
-	//stage.Initialize();
 	player.Initialize();
 }
 //•`‰æŠÖ”
 void GameState::Draw()
 {
-	//stage.Draw();
 	player.Draw();
 }
 
 //ƒƒCƒ“‚Ì“®ì
 void GameState::Update()
 {
-	//stage.Update();
 	player.Update();
 }

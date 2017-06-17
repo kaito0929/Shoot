@@ -146,8 +146,8 @@ void Stage::Initialize()
 
 	for (int i = 0; i < 6; i++)
 	{
-		obb[i].SetLength(200, 200, 200);
-		obb[i].UpdateInfo(pos[i], forward[i], right[i], up[i]);
+		StageObb[i].SetLength(200, 200, 200);
+		StageObb[i].UpdateInfo(pos[i], forward[i], right[i], up[i]);
 	}
 }
 
@@ -158,7 +158,7 @@ void Stage::Draw()
 
 	for (int i = 0; i < 6; i++)
 	{
-		obb[i].DrawLine();
+		StageObb[i].DrawLine();
 	}
 }
 
@@ -167,7 +167,20 @@ void Stage::Update()
 {
 	for (int i = 0; i < 6; i++)
 	{
-		obb[i].UpdateInfo(pos[i], forward[i], right[i], up[i]);
+		StageObb[i].UpdateInfo(pos[i], forward[i], right[i], up[i]);
 	}
 }
 
+
+//ステージとの当たり判定を行う関数
+//obbに判定を取りたいモデルの当たり判定を入れる
+bool Stage::StageCollision(OrientedBoundingBox obb)
+{
+	for (int i = 0; i < STAGE_COLLNUM; i++)
+	{
+		if (OrientedBoundingBox::Collision(obb, StageObb[i]))
+		{
+			return true;
+		}
+	}
+}
