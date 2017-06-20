@@ -32,9 +32,12 @@ void Player::Initialize()
 	PlayerPos.y = 30.0f;
 	PlayerPos.z = 0.0f;
 
-	PlayerAngle.x = 0.0f;
+	/*PlayerAngle.x = 0.0f;
 	PlayerAngle.y = 0.0f;
 	PlayerAngle.z = 0.0f;
+*/
+
+	PlayerYaw = PlayerPitch = 0.0f;
 
 	CameraPos.x = 0.0f;
 	CameraPos.y = 50.0f;
@@ -72,7 +75,7 @@ void Player::Draw()
 {
 	D3DXMatrixTranslation(&mat_transform, PlayerPos.x, PlayerPos.y, PlayerPos.z);	//座標
 	D3DXMatrixScaling(&mat_scale, 0.1f, 0.1f, 0.1f);								//拡大
-	D3DXMatrixRotationYawPitchRoll(&mat_rotate,PlayerAngle.x, PlayerAngle.y, PlayerAngle.z);//回転
+	D3DXMatrixRotationYawPitchRoll(&mat_rotate,PlayerYaw, -PlayerPitch,0.0f);//回転	
 
 	if (PlayerAliveFlag == true)
 	{
@@ -97,7 +100,7 @@ void Player::Update()
 	stage.Update();
 	shot.Update();
 
-	shot.ShotPosSet(PlayerPos, PlayerAngle, ShotFlag);
+	shot.ShotPosSet(PlayerPos, Direction, ShotFlag);
 
 	//プレイヤーの生存フラグがtrueならば処理を行うように
 	if (PlayerAliveFlag == true)
@@ -120,55 +123,61 @@ void Player::PlayerMoveControl()
 	DirectInput* pDi = DirectInput::GetInstance();
 
 	////プレイヤーの向いている方向に向かって自動で前進
-	PlayerPos.x += sin(PlayerAngle.x)*PLAYER_SPEED;
-	PlayerPos.y += sin(-PlayerAngle.y)*PLAYER_SPEED;
-	PlayerPos.z += cos(PlayerAngle.z)*PLAYER_SPEED;
+
+	float flatLength = cos(PlayerPitch);
+
+	Direction.x = sin(PlayerYaw)*flatLength;
+	Direction.y = sin(PlayerPitch);
+	Direction.z = cos(PlayerYaw)*flatLength;
+
+	PlayerPos += Direction*PLAYER_SPEED;
 
 	//下方への方向転換
 	if (pDi->KeyCount(DIK_UP))
 	{
-		PlayerAngle.y += PLAYERANGLE_CHANGENUM;
+		PlayerPitch += PLAYERANGLE_CHANGENUM;
 
-		if (PlayerAngle.y >= PLAYERANGLE_DOWNMAX)
+		if (PlayerPitch >= PLAYERANGLE_DOWNMAX)
 		{
-			PlayerAngle.y = PLAYERANGLE_DOWNMAX;
+			PlayerPitch = PLAYERANGLE_DOWNMAX;
 		}
 	}
+
 	//上方への方向変換
 	if (pDi->KeyCount(DIK_DOWN))
 	{
-		PlayerAngle.y -= PLAYERANGLE_CHANGENUM;
+		PlayerPitch -= PLAYERANGLE_CHANGENUM;
 
-		if (PlayerAngle.y <= PLAYERANGLE_UPMAX)
+		if (PlayerPitch <= PLAYERANGLE_UPMAX)
 		{
-			PlayerAngle.y = PLAYERANGLE_UPMAX;
+			PlayerPitch = PLAYERANGLE_UPMAX;
 		}
 	}
 
 	//左への方向転換
 	if (pDi->KeyCount(DIK_LEFT))
 	{
-		PlayerAngle.z -= PLAYERANGLE_CHANGENUM;
-		PlayerAngle.x -= PLAYERANGLE_CHANGENUM;
+		PlayerYaw -= PLAYERANGLE_CHANGENUM;
+		
 
-		if (PlayerAngle.z <= PLAYERANGLE_LEFTMAX&&PlayerAngle.x <= PLAYERANGLE_LEFTMAX)
+	/*	if (PlayerAngle.z <= PLAYERANGLE_LEFTMAX&&PlayerAngle.x <= PLAYERANGLE_LEFTMAX)
 		{
 			PlayerAngle.z = PLAYERANGLE_LEFTMAX;
 			PlayerAngle.x = PLAYERANGLE_LEFTMAX;
-		}
+		}*/
 	}
 
 	//右への方向変換
 	if (pDi->KeyCount(DIK_RIGHT))
 	{
-		PlayerAngle.z += PLAYERANGLE_CHANGENUM;
-		PlayerAngle.x += PLAYERANGLE_CHANGENUM;
+		PlayerYaw += PLAYERANGLE_CHANGENUM;
+		/*PlayerAngle.x += PLAYERANGLE_CHANGENUM;
 
 		if (PlayerAngle.z >= PLAYERANGLE_RIGHTMAX&&PlayerAngle.x >= PLAYERANGLE_RIGHTMAX)
 		{
 			PlayerAngle.z = PLAYERANGLE_RIGHTMAX;
 			PlayerAngle.x = PLAYERANGLE_RIGHTMAX;
-		}
+		}*/
 	}
 
 	//スペースキーを押して弾を発射
@@ -188,15 +197,18 @@ void Player::PlayerMoveControl()
 //カメラの動きの制御
 void Player::CameraControl()
 {
+	D3DXVECTOR3 v;
+	
+
 	//自機に合わせたカメラの移動
-	CameraPos.x = PlayerPos.x + sin(PlayerAngle.x)*CAMERA_RADIUS_MINUS;
+	/*CameraPos.x = PlayerPos.x + sin(PlayerAngle.x)*CAMERA_RADIUS_MINUS;
 	CameraPos.y = (PlayerPos.y+20.0f) + sin(-PlayerAngle.y)*CAMERA_RADIUS_MINUS;
-	CameraPos.z = PlayerPos.z + cos(PlayerAngle.z)*CAMERA_RADIUS_MINUS;
+	CameraPos.z = PlayerPos.z + cos(PlayerAngle.z)*CAMERA_RADIUS_MINUS;*/
+
+	CameraPos = PlayerPos + (Direction*-1 * 100);
 
 	//自機の方向に合わせたカメラの方向変換
-	CameraRel.x = sin(PlayerAngle.x)*CAMERA_RADIUS_PLUS;
-	CameraRel.y = sin(-PlayerAngle.y)*CAMERA_RADIUS_PLUS;
-	CameraRel.z = cos(PlayerAngle.z)*CAMERA_RADIUS_PLUS;
+	CameraRel = Direction;
 
 	//座標の更新
 	camera.SetEyePoint(CameraPos);
@@ -210,14 +222,16 @@ void Player::CameraControl()
 void Player::PlayerObbUpdate()
 {
 	//正面	
-	forward.x = cos(-PlayerAngle.x + (D3DX_PI / 2));
-	forward.y = cos(PlayerAngle.y + (D3DX_PI / 2));
-	forward.z = sin(-PlayerAngle.z + (D3DX_PI / 2));
+	
 
-	//右側
-	right.x = cos(-PlayerAngle.x);
-	right.y = 0;
-	right.z = sin(-PlayerAngle.z);
+	//forward.x = cos(-PlayerAngle.x + (D3DX_PI / 2));
+	//forward.y = cos(PlayerAngle.y + (D3DX_PI / 2));
+	//forward.z = sin(-PlayerAngle.z + (D3DX_PI / 2));
+
+	////右側
+	//right.x = cos(-PlayerAngle.x);
+	//right.y = 0;
+	//right.z = sin(-PlayerAngle.z);
 
 	PlayerObb.UpdateInfo(PlayerPos, forward, right, up);
 }

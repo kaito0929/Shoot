@@ -41,8 +41,11 @@ private:
 	//プレイヤーの位置
 	D3DXVECTOR3 PlayerPos;
 	//プレイヤーの向き
-	D3DXVECTOR3 PlayerAngle;
+	//D3DXVECTOR3 PlayerAngle;
+	D3DXVECTOR3 Direction;
 
+	float PlayerYaw;
+	float PlayerPitch;
 
 
 	//各方向のベクトル
