@@ -18,16 +18,8 @@
 #include "SoundEffect.h"
 
 #include "Title.h"
+#include "../Global.h"
 
-//フェードアウト用の数値
-#define FADE_OUT_CHANGENUM 1 
-#define FADE_OUT_END 1
-//フェードイン用の数値
-#define FADE_IN_CHANGENUM -1 
-#define FADE_IN_END 0
-
-//フェードイン、アウトのスピード
-#define FADE_SPEED 0.01f
 
 #define BUTTON_DRAW_SPEED 30
 #define BUTTON_DRAW_TIMING 0

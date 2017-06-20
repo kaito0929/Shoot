@@ -52,7 +52,7 @@ public:
 
 	void BulletShot(bool shotFlag[SHOTNUM]);
 
-	void ShotPosSet(D3DXVECTOR3 pPos,D3DXVECTOR3 pAngle,bool shotFlag[SHOTNUM]);
+	void ShotPosSet(D3DXVECTOR3 pPos,float yaw,float pitch,bool shotFlag[SHOTNUM]);
 
 
 	//’e‚Ì“–‚½‚è”»’è

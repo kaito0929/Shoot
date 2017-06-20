@@ -16,6 +16,7 @@
 
 #include "Player.h"
 #include "Sound.h"
+#include "../Global.h"
 
 class Hard : public BaseScene
 {
@@ -23,6 +24,10 @@ private:
 
 	Player player;
 	Sound sound;
+
+	//フェードアウト用のテクスチャ
+	Texture FadeTex;
+	Sprite FadeSprite;
 
 public:
 

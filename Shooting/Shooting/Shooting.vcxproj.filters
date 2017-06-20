@@ -194,5 +194,8 @@
     <ClInclude Include="Game\Normal.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

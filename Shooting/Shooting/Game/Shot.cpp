@@ -50,7 +50,7 @@ void Shot::Initialize()
 
 void Shot::Draw()
 {
-	
+
 }
 
 void Shot::Update()
@@ -75,19 +75,19 @@ void Shot::BulletShot(bool shotFlag[SHOTNUM])
 
 
 //íeÇÃî≠éÀà íuÇê›íËÇ∑ÇÈä÷êî
-void Shot::ShotPosSet(D3DXVECTOR3 pPos, D3DXVECTOR3 pAngle, bool shotFlag[SHOTNUM])
+void Shot::ShotPosSet(D3DXVECTOR3 pPos, float yaw, float pitch, bool shotFlag[SHOTNUM])
 {
 	for (int i = 0; i < SHOTNUM; i++)
 	{
 		if (shotFlag[i] == true)
 		{
 			BulletPos[i].x += sin(BulletAngle[i].x)*SHOTSPEED;
-			BulletPos[i].y += sin(-BulletAngle[i].y)*SHOTSPEED;
+			BulletPos[i].y += sin(BulletAngle[i].y)*SHOTSPEED;
 			BulletPos[i].z += cos(BulletAngle[i].z)*SHOTSPEED;
 
 			//ê≥ñ 	
 			forward.x = cos(-BulletAngle[i].x + (D3DX_PI / 2));
-			forward.y = cos(BulletAngle[i].y + (D3DX_PI / 2));
+			forward.y = cos(-BulletAngle[i].y + (D3DX_PI / 2));
 			forward.z = sin(-BulletAngle[i].z + (D3DX_PI / 2));
 
 			//âEë§
@@ -99,13 +99,13 @@ void Shot::ShotPosSet(D3DXVECTOR3 pPos, D3DXVECTOR3 pAngle, bool shotFlag[SHOTNU
 		}
 		else
 		{
-			BulletAngle[i].x = pAngle.x;
-			BulletAngle[i].y = pAngle.y;
-			BulletAngle[i].z = pAngle.z;
+			BulletAngle[i].x = yaw;
+			BulletAngle[i].y = pitch;
+			BulletAngle[i].z = yaw;
 
 
 			BulletPos[i].x = pPos.x + sin(BulletAngle[i].x)*30.0f;
-			BulletPos[i].y = pPos.y + sin(-BulletAngle[i].y)*30.0f;
+			BulletPos[i].y = pPos.y + sin(BulletAngle[i].y)*50.0f;
 			BulletPos[i].z = pPos.z + cos(BulletAngle[i].z)*30.0f;
 
 			bulletObb[i].UpdateInfo(BulletPos[i], forward, right, up);

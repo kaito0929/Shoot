@@ -86,9 +86,7 @@ void Title::Draw()
 	}
 
 	EasySptite.SetPos(ButtonMoveNum[0], 400);
-
 	NormalSptite.SetPos(ButtonMoveNum[1], 600);
-
 	HardSptite.SetPos(ButtonMoveNum[2], 800);
 
 
@@ -168,7 +166,7 @@ void Title::Update()
 			dif = EASY;
 
 			//完全に画面が暗くなったならシーンをメインゲームに変更
-			if (FadeSprite.GetAlpha() == 1)
+			if (FadeSprite.GetAlpha() == FADE_OUT_END)
 			{
 				sound.TitleSoundStop();
 				mSceneChanger->ChangeScene(STATE_EASY);
@@ -184,7 +182,7 @@ void Title::Update()
 			dif = NORMAL;
 
 			//完全に画面が暗くなったならシーンをメインゲームに変更
-			if (FadeSprite.GetAlpha() == 1)
+			if (FadeSprite.GetAlpha() == FADE_OUT_END)
 			{
 				sound.TitleSoundStop();
 				mSceneChanger->ChangeScene(STATE_NORMAL);
@@ -200,7 +198,7 @@ void Title::Update()
 			dif = HARD;
 
 			//完全に画面が暗くなったならシーンをメインゲームに変更
-			if (FadeSprite.GetAlpha() == 1)
+			if (FadeSprite.GetAlpha() == FADE_OUT_END)
 			{
 				sound.TitleSoundStop();
 				mSceneChanger->ChangeScene(STATE_HARD);
@@ -224,7 +222,7 @@ void Title::Update()
 	//FadeFlagがtrueなら実行するように
 	if (FadeFlag == true)
 	{
-		FadeSprite.SetAlpha(FadeSprite.GetAlpha() + (0.01f*FADE_OUT_CHANGENUM));
+		FadeSprite.SetAlpha(FadeSprite.GetAlpha() + (FADE_SPEED*FADE_OUT_CHANGENUM));
 	}
 
 	

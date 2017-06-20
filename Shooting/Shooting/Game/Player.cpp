@@ -75,7 +75,7 @@ void Player::Draw()
 {
 	D3DXMatrixTranslation(&mat_transform, PlayerPos.x, PlayerPos.y, PlayerPos.z);	//座標
 	D3DXMatrixScaling(&mat_scale, 0.1f, 0.1f, 0.1f);								//拡大
-	D3DXMatrixRotationYawPitchRoll(&mat_rotate,PlayerYaw, -PlayerPitch,0.0f);//回転	
+	D3DXMatrixRotationYawPitchRoll(&mat_rotate, PlayerYaw, -PlayerPitch,0.0f);//回転	
 
 	if (PlayerAliveFlag == true)
 	{
@@ -91,7 +91,9 @@ void Player::Draw()
 			shot.BulletShot(ShotFlag);
 		}
 	}
+	PlayerObb.DrawLine();
 
+	shot.Draw();
 	stage.Draw();
 }
 
@@ -100,17 +102,18 @@ void Player::Update()
 	stage.Update();
 	shot.Update();
 
-	shot.ShotPosSet(PlayerPos, Direction, ShotFlag);
-
 	//プレイヤーの生存フラグがtrueならば処理を行うように
-	if (PlayerAliveFlag == true)
+	if (PlayerAliveFlag == true && TargetOllBreakFlag == false)
 	{
 		PlayerMoveControl();
 		CameraControl();
 		PlayerObbUpdate();
 	}
 
-	if (ShotNum == 5)
+	shot.ShotPosSet(PlayerPos, PlayerYaw,PlayerPitch, ShotFlag);
+
+
+	if (ShotNum == SHOTNUM)
 	{
 		ShotNum = 0;
 	}
@@ -122,7 +125,7 @@ void Player::PlayerMoveControl()
 {
 	DirectInput* pDi = DirectInput::GetInstance();
 
-	////プレイヤーの向いている方向に向かって自動で前進
+	//プレイヤーの向いている方向に向かって自動で前進
 
 	float flatLength = cos(PlayerPitch);
 
@@ -132,7 +135,7 @@ void Player::PlayerMoveControl()
 
 	PlayerPos += Direction*PLAYER_SPEED;
 
-	//下方への方向転換
+	//上方への方向転換
 	if (pDi->KeyCount(DIK_UP))
 	{
 		PlayerPitch += PLAYERANGLE_CHANGENUM;
@@ -143,7 +146,7 @@ void Player::PlayerMoveControl()
 		}
 	}
 
-	//上方への方向変換
+	//下方への方向変換
 	if (pDi->KeyCount(DIK_DOWN))
 	{
 		PlayerPitch -= PLAYERANGLE_CHANGENUM;
@@ -157,27 +160,13 @@ void Player::PlayerMoveControl()
 	//左への方向転換
 	if (pDi->KeyCount(DIK_LEFT))
 	{
-		PlayerYaw -= PLAYERANGLE_CHANGENUM;
-		
-
-	/*	if (PlayerAngle.z <= PLAYERANGLE_LEFTMAX&&PlayerAngle.x <= PLAYERANGLE_LEFTMAX)
-		{
-			PlayerAngle.z = PLAYERANGLE_LEFTMAX;
-			PlayerAngle.x = PLAYERANGLE_LEFTMAX;
-		}*/
+		PlayerYaw -= PLAYERANGLE_CHANGENUM;		
 	}
 
 	//右への方向変換
 	if (pDi->KeyCount(DIK_RIGHT))
 	{
 		PlayerYaw += PLAYERANGLE_CHANGENUM;
-		/*PlayerAngle.x += PLAYERANGLE_CHANGENUM;
-
-		if (PlayerAngle.z >= PLAYERANGLE_RIGHTMAX&&PlayerAngle.x >= PLAYERANGLE_RIGHTMAX)
-		{
-			PlayerAngle.z = PLAYERANGLE_RIGHTMAX;
-			PlayerAngle.x = PLAYERANGLE_RIGHTMAX;
-		}*/
 	}
 
 	//スペースキーを押して弾を発射
@@ -197,15 +186,9 @@ void Player::PlayerMoveControl()
 //カメラの動きの制御
 void Player::CameraControl()
 {
-	D3DXVECTOR3 v;
-	
 
 	//自機に合わせたカメラの移動
-	/*CameraPos.x = PlayerPos.x + sin(PlayerAngle.x)*CAMERA_RADIUS_MINUS;
-	CameraPos.y = (PlayerPos.y+20.0f) + sin(-PlayerAngle.y)*CAMERA_RADIUS_MINUS;
-	CameraPos.z = PlayerPos.z + cos(PlayerAngle.z)*CAMERA_RADIUS_MINUS;*/
-
-	CameraPos = PlayerPos + (Direction*-1 * 100);
+	CameraPos = PlayerPos + (Direction*-0.6 * 100);
 
 	//自機の方向に合わせたカメラの方向変換
 	CameraRel = Direction;
@@ -222,16 +205,14 @@ void Player::CameraControl()
 void Player::PlayerObbUpdate()
 {
 	//正面	
-	
-
-	//forward.x = cos(-PlayerAngle.x + (D3DX_PI / 2));
-	//forward.y = cos(PlayerAngle.y + (D3DX_PI / 2));
-	//forward.z = sin(-PlayerAngle.z + (D3DX_PI / 2));
+	forward.x = cos(-PlayerYaw + (D3DX_PI / 2));
+	forward.y = cos(-PlayerPitch + (D3DX_PI / 2));
+	forward.z = sin(-PlayerYaw + (D3DX_PI / 2));
 
 	////右側
-	//right.x = cos(-PlayerAngle.x);
-	//right.y = 0;
-	//right.z = sin(-PlayerAngle.z);
+	right.x = cos(-PlayerYaw);
+	right.y = 0;
+	right.z = sin(-PlayerYaw);
 
 	PlayerObb.UpdateInfo(PlayerPos, forward, right, up);
 }

@@ -12,11 +12,9 @@
 #include "../Scene/ISceneChanger.h"
 #include "../Scene/BaseScene.h"
 
+#include "../Global.h"
 #include "Sound.h"
 #include "SoundEffect.h"
-
-//フェードアウト用の数値
-#define FADE_OUT_CHANGENUM 1 
 
 
 //難易度

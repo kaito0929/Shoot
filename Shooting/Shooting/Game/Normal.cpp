@@ -38,15 +38,29 @@ void Normal::Update()
 	player.NormalUpdate();
 	sound.MainSoundPlay();
 
+	//プレイヤーが何かと衝突したら処理
+	//フェードアウトを開始し、ゲームオーバー画面へ遷移する
 	if (player.GetAliveFlag() == false)
 	{
-		mSceneChanger->ChangeScene(STATE_GAMEOVER);
-		sound.MainSoundStop();
+		FadeSprite.SetAlpha(FadeSprite.GetAlpha() + (FADE_SPEED * FADE_OUT_CHANGENUM));
+
+		//完全に画面が暗くなったならシーンを遷移
+		if (FadeSprite.GetAlpha() == FADE_OUT_END)
+		{
+			sound.MainSoundStop();
+			mSceneChanger->ChangeScene(STATE_GAMEOVER);
+		}
 	}
 
-	if (player.GetOllBreakFlag() == true)
+	if (player.GetOllBreakFlag() == true && player.GetAliveFlag() == true)
 	{
-		mSceneChanger->ChangeScene(STATE_RESULT);
-		sound.MainSoundStop();
+		FadeSprite.SetAlpha(FadeSprite.GetAlpha() + (FADE_SPEED * FADE_OUT_CHANGENUM));
+
+		//完全に画面が暗くなったならシーンを遷移
+		if (FadeSprite.GetAlpha() == FADE_OUT_END)
+		{
+			sound.MainSoundStop();
+			mSceneChanger->ChangeScene(STATE_RESULT);
+		}
 	}
 }

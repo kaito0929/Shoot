@@ -200,6 +200,7 @@
     <ClInclude Include="Game\Stage.h" />
     <ClInclude Include="Game\Target.h" />
     <ClInclude Include="Game\Title.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="MyVector.h" />
     <ClInclude Include="Scene\BaseScene.h" />
