@@ -5,6 +5,7 @@
 #include "../Sprite.h"
 #include "../mesh.h"
 #include "../Direct3D.h"
+
 #include <stdio.h>
 #include <stdlib.h>	//rand()関数用
 #include <time.h>	//time()関数用
@@ -55,12 +56,15 @@ void Player::Initialize()
 	PlayerObb.SetLength(20, 10, 10);
 
 	PlayerAliveFlag = true;
-	ShotFlag = false;
 
+	for (int i = 0;i < SHOTNUM; i++)
+	{
+		ShotFlag[i] = false;
+	}
 
 	stage.Initialize();
-	target.Initialize();
 	shot.Initialize();
+	se.Initialize();
 }
 
 //描画関数
@@ -68,7 +72,7 @@ void Player::Draw()
 {
 	D3DXMatrixTranslation(&mat_transform, PlayerPos.x, PlayerPos.y, PlayerPos.z);	//座標
 	D3DXMatrixScaling(&mat_scale, 0.1f, 0.1f, 0.1f);								//拡大
-	D3DXMatrixRotationYawPitchRoll(&mat_rotate,90.0f, 90.0f, 0.0f);//回転
+	D3DXMatrixRotationYawPitchRoll(&mat_rotate,PlayerAngle.x, PlayerAngle.y, PlayerAngle.z);//回転
 
 	if (PlayerAliveFlag == true)
 	{
@@ -76,23 +80,21 @@ void Player::Draw()
 		PlayerModel.Draw(mat_transform, mat_scale, mat_rotate);
 	}
 
-	//ShotFlagがtrueの時に弾を描画
-	if (ShotFlag == true)
+	for (int i = 0; i < SHOTNUM; i++)
 	{
-		shot.BulletShot();
+		//ShotFlagがtrueの時に弾を描画
+		if (ShotFlag[i] == true)
+		{
+			shot.BulletShot(ShotFlag);
+		}
 	}
 
-	//PlayerObb.DrawLine();
-
 	stage.Draw();
-	target.Draw();
-	shot.Draw();
 }
 
 void Player::Update()
 {
 	stage.Update();
-	target.Update();
 	shot.Update();
 
 	shot.ShotPosSet(PlayerPos, PlayerAngle, ShotFlag);
@@ -105,23 +107,10 @@ void Player::Update()
 		PlayerObbUpdate();
 	}
 
-
-
-	if (ShotFlag == true)
+	if (ShotNum == 5)
 	{
-		//弾がステージかターゲットに当たった時の処理を行う
-		if (stage.StageCollision(shot.bulletObb) == true || target.TargetColl(shot.bulletObb) == true)
-		{
-			ShotFlag = false;
-		}
+		ShotNum = 0;
 	}
-
-	//ステージとプレイヤーの当たり判定を処理する
-	if (stage.StageCollision(PlayerObb) == true || target.TargetColl(PlayerObb) == true)
-	{
-		PlayerAliveFlag = false;
-	}
-
 
 }
 
@@ -131,9 +120,9 @@ void Player::PlayerMoveControl()
 	DirectInput* pDi = DirectInput::GetInstance();
 
 	////プレイヤーの向いている方向に向かって自動で前進
-	//PlayerPos.x += sin(PlayerAngle.x)*PLAYER_SPEED;
-	//PlayerPos.y += sin(-PlayerAngle.y)*PLAYER_SPEED;
-	//PlayerPos.z += cos(PlayerAngle.z)*PLAYER_SPEED;
+	PlayerPos.x += sin(PlayerAngle.x)*PLAYER_SPEED;
+	PlayerPos.y += sin(-PlayerAngle.y)*PLAYER_SPEED;
+	PlayerPos.z += cos(PlayerAngle.z)*PLAYER_SPEED;
 
 	//下方への方向転換
 	if (pDi->KeyCount(DIK_UP))
@@ -183,9 +172,14 @@ void Player::PlayerMoveControl()
 	}
 
 	//スペースキーを押して弾を発射
-	if (pDi->KeyCount(DIK_SPACE))
+	if (pDi->KeyJustPressed(DIK_SPACE))
 	{
-		ShotFlag = true;
+		if (ShotFlag[ShotNum] == false)
+		{
+			ShotFlag[ShotNum] = true;
+			ShotNum++;
+			se.ShotSEPlay();
+		}
 	}
 
 }
@@ -196,7 +190,7 @@ void Player::CameraControl()
 {
 	//自機に合わせたカメラの移動
 	CameraPos.x = PlayerPos.x + sin(PlayerAngle.x)*CAMERA_RADIUS_MINUS;
-	CameraPos.y = (PlayerPos.y) + sin(-PlayerAngle.y)*CAMERA_RADIUS_MINUS;
+	CameraPos.y = (PlayerPos.y+20.0f) + sin(-PlayerAngle.y)*CAMERA_RADIUS_MINUS;
 	CameraPos.z = PlayerPos.z + cos(PlayerAngle.z)*CAMERA_RADIUS_MINUS;
 
 	//自機の方向に合わせたカメラの方向変換
@@ -226,4 +220,149 @@ void Player::PlayerObbUpdate()
 	right.z = sin(-PlayerAngle.z);
 
 	PlayerObb.UpdateInfo(PlayerPos, forward, right, up);
+}
+
+//--□イージーモード関係□------------------------------------------------------------
+void Player::EasyInitialize()
+{
+	easyTarget.EasyTargetInitialize();
+}
+
+void Player::EasyDraw()
+{
+	easyTarget.EasyTargetDraw();
+}
+
+void Player::EasyUpdate()
+{
+	for (int i = 0; i < SHOTNUM; i++)
+	{
+		if (ShotFlag[i] == true)
+		{
+			//弾がステージかターゲットに当たった時の処理を行う
+			if (stage.StageCollision(shot.bulletObb[i]) == true || easyTarget.EasyTargetColl(shot.bulletObb[i]) == true)
+			{
+				ShotFlag[i] = false;
+				se.ShotHitSEPlay();
+			}
+		}
+	}
+
+	//ステージとプレイヤーの当たり判定を処理する
+	if (stage.StageCollision(PlayerObb) == true || easyTarget.EasyTargetColl(PlayerObb) == true)
+	{
+		PlayerAliveFlag = false;
+		se.PlayerHitSEPlay();
+	}
+
+
+	for (int i = 0; i < EASYTARGETNUM; i++)
+	{
+		if (easyTarget.EasyTargetExistenceFlag[i] == true)
+		{
+			TargetOllBreakFlag = false;
+			break;
+		}
+		else
+		{
+			TargetOllBreakFlag = true;
+		}
+	}
+}
+
+//--□ノーマルモード関係□------------------------------------------------------------
+void Player::NormalInitialize()
+{
+	normalTarget.NormalTargetInitialize();
+}
+
+void Player::NormalDraw()
+{
+	normalTarget.NormalTargetDraw();
+}
+
+void Player::NormalUpdate()
+{
+	for (int i = 0; i < SHOTNUM; i++)
+	{
+		if (ShotFlag[i] == true)
+		{
+			//弾がステージかターゲットに当たった時の処理を行う
+			if (stage.StageCollision(shot.bulletObb[i]) == true || normalTarget.NormalTargetColl(shot.bulletObb[i]) == true)
+			{
+				ShotFlag[i] = false;
+				se.ShotHitSEPlay();
+			}
+		}
+	}
+
+	//ステージとプレイヤーの当たり判定を処理する
+	if (stage.StageCollision(PlayerObb) == true || normalTarget.NormalTargetColl(PlayerObb) == true)
+	{
+		PlayerAliveFlag = false;
+		se.PlayerHitSEPlay();
+	}
+
+
+	for (int i = 0; i < NORMALTARGETNUM; i++)
+	{
+		if (normalTarget.NormalTargetExistenceFlag[i] == true)
+		{
+			TargetOllBreakFlag = false;
+			break;
+		}
+		else
+		{
+			TargetOllBreakFlag = true;
+		}
+	}
+}
+
+
+//--□ハードモード関係□------------------------------------------------------------
+void Player::HardInitialize()
+{
+	hardTarget.HardTargetInitialize();
+}
+
+void Player::HardDraw()
+{
+	hardTarget.HardTargetDraw();
+}
+
+void Player::HardUpdate()
+{
+	for (int i = 0; i < SHOTNUM; i++)
+	{
+		if (ShotFlag[i] == true)
+		{
+			//弾がステージかターゲットに当たった時の処理を行う
+			if (stage.StageCollision(shot.bulletObb[i]) == true || hardTarget.HardTargetColl(shot.bulletObb[i]) == true)
+			{
+				ShotFlag[i]= false;
+				se.ShotHitSEPlay();
+			}
+		}
+	}
+
+	//ステージとプレイヤーの当たり判定を処理する
+	if (stage.StageCollision(PlayerObb) == true || hardTarget.HardTargetColl(PlayerObb) == true)
+	{
+		PlayerAliveFlag = false;
+		se.PlayerHitSEPlay();
+	}
+
+
+	for (int i = 0; i < HARDTARGETNUM; i++)
+	{
+		if (hardTarget.HardTargetExistenceFlag[i] == true)
+		{
+			TargetOllBreakFlag = false;
+			break;
+		}
+		else
+		{
+			TargetOllBreakFlag = true;
+		}
+	}
 }

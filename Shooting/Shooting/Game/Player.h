@@ -14,6 +14,8 @@
 #include "Target.h"
 #include "Shot.h"
 
+#include "SoundEffect.h"
+
 #define PLAYER_SPEED 0.5f			//自機の移動速度
 #define PLAYERANGLE_CHANGENUM 0.1f	//自機の向きを変える時の数値
 
@@ -42,8 +44,6 @@ private:
 	D3DXVECTOR3 PlayerAngle;
 
 
-	//プレイヤーの当たり判定
-	OrientedBoundingBox PlayerObb;
 
 	//各方向のベクトル
 	D3DXVECTOR3 forward;
@@ -58,16 +58,27 @@ private:
 	//カメラの位置
 	D3DXVECTOR3 CameraRel;
 
+	//プレイヤーの当たり判定
+	OrientedBoundingBox PlayerObb;
+
 	//プレイヤーの生存フラグ
 	bool PlayerAliveFlag;
 
 	//弾発射のフラグ
-	bool ShotFlag;
+	bool ShotFlag[SHOTNUM];
+	int ShotNum;
+
+	//ターゲットを全て破壊したかのフラグ
+	bool TargetOllBreakFlag;
 
 
 	Stage stage;
-	Target target;
 	Shot shot;
+	EasyTarget easyTarget;
+	NormalTarget normalTarget;
+	HardTarget hardTarget;
+
+	SoundEffect se;
 
 public:
 
@@ -91,6 +102,25 @@ public:
 
 	//プレイヤーの当たり判定の動き
 	void PlayerObbUpdate();
+
+	bool GetAliveFlag() { return PlayerAliveFlag; };
+
+	bool GetOllBreakFlag() { return TargetOllBreakFlag; };
+
+
+
+	//--□イージーモード関係□---------------------------------
+	void EasyInitialize();
+	void EasyDraw();
+	void EasyUpdate();
+	//--□ノーマルモード関係□---------------------------------
+	void NormalInitialize();
+	void NormalDraw();
+	void NormalUpdate();
+	//--□ハードモード関係□---------------------------------
+	void HardInitialize();
+	void HardDraw();
+	void HardUpdate();
 
 
 };

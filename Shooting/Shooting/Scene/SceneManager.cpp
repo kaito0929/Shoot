@@ -1,7 +1,9 @@
-#include "../Game/GameState.h"
 #include "../Game/Title.h"
 #include "../Game/Result.h"
 #include "../Game/GameOver.h"
+#include "../Game/Easy.h"
+#include "../Game/Normal.h"
+#include "../Game/Hard.h"
 #include "SceneManager.h"
 
 
@@ -34,8 +36,14 @@ void SceneManager::Update()
 		case STATE_TITLE:
 			mScene = (BaseScene*)new Title(this);	//タイトル画面のインスタンスを生成する
 			break;
-		case STATE_MAIN:
-			mScene = (BaseScene*)new GameState(this);
+		case STATE_EASY:
+			mScene = (BaseScene*)new Easy(this);
+			break;
+		case STATE_NORMAL:
+			mScene = (BaseScene*)new Normal(this);
+			break;
+		case STATE_HARD:
+			mScene = (BaseScene*)new Hard(this);
 			break;
 		case STATE_RESULT:
 			mScene = (BaseScene*)new Result(this);

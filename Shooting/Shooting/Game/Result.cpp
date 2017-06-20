@@ -7,7 +7,6 @@
 #include "../SoundBuffer.h"
 
 #include "Result.h"
-#include "GameState.h"
 
 Result::Result(ISceneChanger* changer) : BaseScene(changer)
 {
@@ -21,18 +20,13 @@ Result::~Result()
 
 void Result::Initialize()
 {
-	//1Pが勝利した場合に表示する画面
-	FirstPlayerVictoryTex.Load("Material/result1.png");
-	FirstPlayerVictorySprite.SetPos(600, 500);
-	FirstPlayerVictorySprite.SetSize(1200, 1100);
+	//リザルト画面のテクスチャ
+	ResultTex.Load("Material/result.png");
+	ResultSprite.SetPos(600, 450);
+	ResultSprite.SetSize(1200, 1000);
 
-	//2Pが勝利した場合に表示する画面
-	SecondPlayerVictoryTex.Load("Material/result2.png");
-	SecondPlayerVictorySprite.SetPos(600, 500);
-	SecondPlayerVictorySprite.SetSize(1200, 1100);
-
-	//エンターを押すように指示するテクスチャ
-	EnterTex.Load("Material/enter.png");
+	//スペースキーを押すように指示するテクスチャ
+	EnterTex.Load("Material/pushspace.png");
 	EnterSprite.SetPos(600, 700);
 	EnterSprite.SetSize(600, 400);
 
@@ -50,14 +44,7 @@ void Result::Draw()
 {
 	Direct3D::SetRenderState(RENDER_ALPHABLEND);
 
-	/*if (SecondPlayerLosingFlag == true)
-	{
-		Direct3D::DrawSprite(FirstPlayerVictorySprite, FirstPlayerVictoryTex);
-	}
-	if (FirstPlayerLosingFlag == true)
-	{
-		Direct3D::DrawSprite(SecondPlayerVictorySprite, SecondPlayerVictoryTex);
-	}*/
+	Direct3D::DrawSprite(ResultSprite, ResultTex);
 
 	if (EnterFlashingNum == 0)
 	{
@@ -74,7 +61,7 @@ void Result::Update()
 {
 	DirectInput* pDi = DirectInput::GetInstance();
 
-	sound.ResultSoundPlay();
+	sound.ClearSoundPlay();
 
 	//==■エンターキーを押すように指示を出すテクスチャを点滅させる■====================================
 	//カウントをプラス
@@ -106,16 +93,17 @@ void Result::Update()
 		}
 		FadeFlag = true;
 	}
+
 	//FadeFlagがtrueなら実行するように
 	if (FadeFlag == true)
 	{
-		//FadeSprite.SetAlpha(FadeSprite.GetAlpha() + (0.01f*FADE_OUT_CHANGENUM));
+		FadeSprite.SetAlpha(FadeSprite.GetAlpha() + (0.01f*FADE_OUT_CHANGENUM));
 	}
 
 	//完全に画面が暗くなったならシーンをメインゲームに変更
 	if (FadeSprite.GetAlpha() == 1)
 	{
-		sound.ResultSoundStop();
+		sound.ClearSoundStop();
 		mSceneChanger->ChangeScene(STATE_TITLE);
 	}
 }

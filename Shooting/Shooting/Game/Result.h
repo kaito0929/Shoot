@@ -14,19 +14,18 @@
 
 #include "Sound.h"
 #include "SoundEffect.h"
-#include "GameState.h"
+
+//フェードアウト用の数値
+#define FADE_OUT_CHANGENUM 1 
+
 
 class Result : public BaseScene
 {
 private:
 
 	//1Pが勝利した場合に表示するテクスチャ
-	Texture FirstPlayerVictoryTex;
-	Sprite FirstPlayerVictorySprite;
-
-	//2Pが勝利した場合に表示するテクスチャ
-	Texture SecondPlayerVictoryTex;
-	Sprite SecondPlayerVictorySprite;
+	Texture ResultTex;
+	Sprite ResultSprite;
 
 	//エンターキーを押してもらう指示のテクスチャ
 	Texture EnterTex;

@@ -17,13 +17,17 @@ private:
 	WaveFile ChoiceSE;
 	SoundBuffer sb_ChoiceSE[10];
 
-	//攻撃した時の猫の鳴き声
-	WaveFile CatSE;
-	SoundBuffer sb_CatSE;
+	//攻撃した時の効果音
+	WaveFile ShotSE;
+	SoundBuffer sb_ShotSE[10];
 
-	//カットインが行われた時の効果音
-	WaveFile CutInSE;
-	SoundBuffer sb_CutInSE;
+	//発射した弾が何かに当たった音
+	WaveFile ShotHitSE;
+	SoundBuffer sb_ShotHitSE[10];
+
+	//自機が何かに当たった時の音
+	WaveFile PlayerHitSE;
+	SoundBuffer sb_PlayerHitSE;
 
 public:
 	SoundEffect();
@@ -36,9 +40,11 @@ public:
 	void DecisionSEPlay();
 	//選択音を鳴らす関数
 	void ChoiceSEPlay();
-	//猫の鳴き声を鳴らす関数
-	void CatSEPlay();
-	//カットインの効果音を鳴らす関数
-	void CutInSEPlay();
+	//攻撃音を鳴らす関数
+	void ShotSEPlay();
+	//着弾した時の効果音を鳴らす関数
+	void ShotHitSEPlay();
+	//自機が何かと衝突した時に効果音を鳴らす関数
+	void PlayerHitSEPlay();
 
 };

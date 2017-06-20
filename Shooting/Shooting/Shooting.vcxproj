@@ -156,8 +156,10 @@
     <ClCompile Include="Direct3D.cpp" />
     <ClCompile Include="directInput.cpp" />
     <ClCompile Include="DirectSound.cpp" />
+    <ClCompile Include="Game\Easy.cpp" />
     <ClCompile Include="Game\GameOver.cpp" />
-    <ClCompile Include="Game\GameState.cpp" />
+    <ClCompile Include="Game\Hard.cpp" />
+    <ClCompile Include="Game\Normal.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\Result.cpp" />
     <ClCompile Include="Game\Shot.cpp" />
@@ -184,8 +186,10 @@
     <ClInclude Include="Direct3D.h" />
     <ClInclude Include="directInput.h" />
     <ClInclude Include="DirectSound.h" />
+    <ClInclude Include="Game\Easy.h" />
     <ClInclude Include="Game\GameOver.h" />
-    <ClInclude Include="Game\GameState.h" />
+    <ClInclude Include="Game\Hard.h" />
+    <ClInclude Include="Game\Normal.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\Result.h" />
     <ClInclude Include="Game\Shot.h" />

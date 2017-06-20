@@ -11,6 +11,7 @@
 #include "../BoundingBox.h"
 
 #define SHOTSPEED 2.0f
+#define SHOTNUM 5
 
 class Shot
 {
@@ -24,11 +25,10 @@ private:
 
 
 	//弾の座標
-	D3DXVECTOR3 BulletPos;
+	D3DXVECTOR3 BulletPos[SHOTNUM];
 
 	//弾の発射する方向と進む方向
-	D3DXVECTOR3 BulletAngle;
-
+	D3DXVECTOR3 BulletAngle[SHOTNUM];
 
 	//各方向のベクトル
 	D3DXVECTOR3 forward;
@@ -50,13 +50,13 @@ public:
 	//描画
 	void Draw();
 
-	void BulletShot();
+	void BulletShot(bool shotFlag[SHOTNUM]);
 
-	void ShotPosSet(D3DXVECTOR3 pPos,D3DXVECTOR3 pAngle,bool shotFlag);
+	void ShotPosSet(D3DXVECTOR3 pPos,D3DXVECTOR3 pAngle,bool shotFlag[SHOTNUM]);
 
 
 	//弾の当たり判定
-	OrientedBoundingBox bulletObb;
+	OrientedBoundingBox bulletObb[SHOTNUM];
 
 
 };

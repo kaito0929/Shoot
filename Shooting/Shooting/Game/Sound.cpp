@@ -1,5 +1,4 @@
 #include "../directInput.h"
-#include "GameState.h"
 #include "../Texture.h"
 #include "../Sprite.h"
 #include "../Direct3D.h"
@@ -29,9 +28,12 @@ void Sound::Initialize()
 	sb_MainMusic.Create(MainMusic);
 
 	//ゲームクリア画面の音関係
-	ResultMusic.Load("Sound/result.wav");
-	sb_ResultMusic.Create(ResultMusic);
+	ClearMusic.Load("Sound/gameclear.wav");
+	sb_ClearMusic.Create(ClearMusic);
 
+	//ゲームオーバー画面の音関係
+	GameOverMusic.Load("Sound/gameover.wav");
+	sb_GameOverMusic.Create(GameOverMusic);
 }
 
 void Sound::Update()
@@ -64,13 +66,25 @@ void Sound::MainSoundStop()
 }
 
 //リザルト画面の音楽を流す関数
-void Sound::ResultSoundPlay()
+void Sound::ClearSoundPlay()
 {
-	sb_ResultMusic.Play(true);
+	sb_ClearMusic.Play(true);
 }
 
 //リザルト画面の音楽を止める関数
-void Sound::ResultSoundStop()
+void Sound::ClearSoundStop()
 {
-	sb_ResultMusic.Stop();
+	sb_ClearMusic.Stop();
+}
+
+//ゲームオーバー画面の音楽を流す関数
+void Sound::GameOverSoundPlay()
+{
+	sb_GameOverMusic.Play(true);
+}
+
+//ゲームオーバー画面の音楽を止める関数
+void Sound::GameOverSoundStop()
+{
+	sb_GameOverMusic.Stop();
 }

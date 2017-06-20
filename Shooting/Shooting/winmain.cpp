@@ -16,27 +16,10 @@
 #include "camera.h"
 #include "BoundingBox.h"
 
-#include "Game/GameState.h"
+#include "Scene/SceneManager.h"
+#include "Scene/ISceneChanger.h"
+#include "Scene/BaseScene.h"
 
-
-void ObbMove(OrientedBoundingBox& obb,float rotate, D3DXVECTOR3 pos)
-{
-	
-	D3DXVECTOR3 forward;
-	D3DXVECTOR3 right;
-	D3DXVECTOR3 up;
-	
-	
-	forward.x = cos(rotate + (D3DX_PI / 2));
-	forward.z = sin(rotate + (D3DX_PI / 2));
-	forward.y = 0;
-
-	right.x = cos(rotate);
-	right.z = sin(rotate);
-	right.y = 0;
-
-	obb.UpdateInfo(pos, forward, right, up);
-}
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {

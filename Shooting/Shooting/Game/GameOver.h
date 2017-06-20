@@ -14,6 +14,31 @@
 #include "../Scene/ISceneChanger.h"
 #include "../Scene/BaseScene.h"
 
+#include "Sound.h"
+#include "SoundEffect.h"
+
+#include "Title.h"
+
+//フェードアウト用の数値
+#define FADE_OUT_CHANGENUM 1 
+#define FADE_OUT_END 1
+//フェードイン用の数値
+#define FADE_IN_CHANGENUM -1 
+#define FADE_IN_END 0
+
+//フェードイン、アウトのスピード
+#define FADE_SPEED 0.01f
+
+#define BUTTON_DRAW_SPEED 30
+#define BUTTON_DRAW_TIMING 0
+
+
+enum GAMEOVERSTATE
+{
+	FADE,
+	RETRY,
+	TITLEGO,
+};
 
 class GameOver : public BaseScene
 {
@@ -31,9 +56,22 @@ private:
 	Texture TitleGoTex;
 	Sprite TitleGoSprite;
 
-	//フェードアウト用のテクスチャ
+	//フェードイン、アウト用のテクスチャ
 	Texture FadeTex;
 	Sprite FadeSprite;
+
+	GAMEOVERSTATE gameoverState;
+
+	int ButtonDrawCount;
+	bool ButtonDrawFlag;
+
+	//フェードアウトを実行するかのフラグ
+	//スペースキーを押したならtrueにする
+	bool FadeFlag;
+
+
+	Sound sound;
+	SoundEffect se;
 
 public:
 
@@ -49,5 +87,7 @@ public:
 	void Update() override;
 	//描画
 	void Draw() override;
+
+	void ButtonDrawSet();
 
 };

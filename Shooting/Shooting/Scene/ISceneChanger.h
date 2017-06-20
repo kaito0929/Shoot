@@ -3,7 +3,9 @@
 typedef enum
 {
 	STATE_TITLE,		//タイトル画面
-	STATE_MAIN,			//ゲーム画面
+	STATE_EASY,
+	STATE_NORMAL,
+	STATE_HARD,
 	STATE_RESULT,		//リザルト画面
 	STATE_GAMEOVER,		//ゲームオーバー画面
 

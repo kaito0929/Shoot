@@ -57,9 +57,6 @@
     <ClCompile Include="Xinput.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\GameState.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\BaseScene.cpp">
       <Filter>SceneMnager</Filter>
     </ClCompile>
@@ -99,6 +96,15 @@
     <ClCompile Include="Game\GameOver.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Easy.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Hard.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Normal.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoundingBox.h">
@@ -136,9 +142,6 @@
     </ClInclude>
     <ClInclude Include="Xinput.h">
       <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\GameState.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Scene\BaseScene.h">
       <Filter>SceneMnager</Filter>
@@ -180,6 +183,15 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Game\GameOver.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Easy.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Hard.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Normal.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

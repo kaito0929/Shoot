@@ -1,5 +1,4 @@
 #include "../directInput.h"
-#include "GameState.h"
 #include "../Texture.h"
 #include "../Sprite.h"
 #include "../Direct3D.h"
@@ -23,37 +22,27 @@ void SoundEffect::Initialize()
 
 	//決定した時の効果音
 	DecisionSE.Load("Sound/decision.wav");
-	sb_DicisionSE[0].Create(DecisionSE);
-	sb_DicisionSE[1].Create(DecisionSE);
-	sb_DicisionSE[2].Create(DecisionSE);
-	sb_DicisionSE[3].Create(DecisionSE);
-	sb_DicisionSE[4].Create(DecisionSE);
-	sb_DicisionSE[5].Create(DecisionSE);
-	sb_DicisionSE[6].Create(DecisionSE);
-	sb_DicisionSE[7].Create(DecisionSE);
-	sb_DicisionSE[8].Create(DecisionSE);
-	sb_DicisionSE[9].Create(DecisionSE);
 
 	//選択した時の効果音
 	ChoiceSE.Load("Sound/choice.wav");
-	sb_ChoiceSE[0].Create(ChoiceSE);
-	sb_ChoiceSE[1].Create(ChoiceSE);
-	sb_ChoiceSE[2].Create(ChoiceSE);
-	sb_ChoiceSE[3].Create(ChoiceSE);
-	sb_ChoiceSE[4].Create(ChoiceSE);
-	sb_ChoiceSE[5].Create(ChoiceSE);
-	sb_ChoiceSE[6].Create(ChoiceSE);
-	sb_ChoiceSE[7].Create(ChoiceSE);
-	sb_ChoiceSE[8].Create(ChoiceSE);
-	sb_ChoiceSE[9].Create(ChoiceSE);
 
-	//猫の鳴き声
-	CatSE.Load("Sound/cat7.wav");
-	sb_CatSE.Create(CatSE);
+	//発射音
+	ShotSE.Load("Sound/shot.wav");
 
-	//カットインの効果音
-	CutInSE.Load("Sound/cutin.wav");
-	sb_CutInSE.Create(CutInSE);
+	//着弾音
+	ShotHitSE.Load("Sound/shotHit.wav");
+
+	//自機の衝突音
+	PlayerHitSE.Load("Sound/playerHit.wav");
+	sb_PlayerHitSE.Create(PlayerHitSE);
+
+	for (int i = 0; i < 10; i++)
+	{
+		sb_DicisionSE[i].Create(DecisionSE);
+		sb_ChoiceSE[i].Create(ChoiceSE);
+		sb_ShotSE[i].Create(ShotSE);
+		sb_ShotHitSE[i].Create(ShotHitSE);
+	}
 
 }
 
@@ -88,14 +77,33 @@ void SoundEffect::ChoiceSEPlay()
 	}
 }
 
-//猫の鳴き声を鳴らす関数
-void SoundEffect::CatSEPlay()
+//発射音を鳴らす関数
+void SoundEffect::ShotSEPlay()
 {
-	sb_CatSE.Play(false);
+	for (int i = 0; i < 10; i++)
+	{
+		if (sb_ShotSE[i].Playing() == false)
+		{
+			sb_ShotSE[i].Play(false);
+			break;
+		}
+	}
 }
 
-//カットインの効果音を鳴らす関数
-void SoundEffect::CutInSEPlay()
+//着弾音を鳴らす関数
+void SoundEffect::ShotHitSEPlay()
 {
-	sb_CutInSE.Play(false);
+	for (int i = 0; i < 10; i++)
+	{
+		if (sb_ShotHitSE[i].Playing() == false)
+		{
+			sb_ShotHitSE[i].Play(false);
+			break;
+		}
+	}
+}
+
+void SoundEffect::PlayerHitSEPlay()
+{
+	sb_PlayerHitSE.Play(false);
 }

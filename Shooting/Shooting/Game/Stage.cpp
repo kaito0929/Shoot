@@ -1,4 +1,3 @@
-#include "GameState.h"
 #include "Stage.h"
 #include "../directInput.h"
 #include "../Xinput.h"
@@ -155,11 +154,6 @@ void Stage::Initialize()
 void Stage::Draw()
 {
 	BackGround.Draw(mat_transform, mat_scale, mat_rotate);
-
-	for (int i = 0; i < 6; i++)
-	{
-		StageObb[i].DrawLine();
-	}
 }
 
 

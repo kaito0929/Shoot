@@ -18,6 +18,25 @@
 //フェードアウト用の数値
 #define FADE_OUT_CHANGENUM 1 
 
+
+//難易度
+enum DIFFICULTY
+{
+	EASY,
+	NORMAL,
+	HARD,
+};
+
+//タイトルのフロー
+enum TITLESTATE
+{
+	START,
+	BUTTONMOVE,
+	SELECT,
+};
+
+extern DIFFICULTY dif;
+
 class Title : public BaseScene
 {
 private:
@@ -30,20 +49,42 @@ private:
 	Texture EnterTex;
 	Sprite EnterSprite;
 
+	//難易度選択用のテクスチャ（Easy）
+	Texture EasyTex;
+	Sprite EasySptite;
+
+	//難易度選択用のテクスチャ（Normal）
+	Texture NormalTex;
+	Sprite NormalSptite;
+
+	//難易度選択用のテクスチャ（Hard）
+	Texture HardTex;
+	Sprite HardSptite;
+
+
 	//フェードアウト用のテクスチャ
 	Texture FadeTex;
 	Sprite FadeSprite;
 
 	//フェードアウトを実行するかのフラグ
-	//エンターキーを押したならtrueにする
+	//スペースキーを押したならtrueにする
 	bool FadeFlag;
 
 	//エンターキーの操作を促すフォントを点滅させるための変数
 	int EnterDrawCount;
 	int EnterFlashingNum;
 
+	int ButtonMoveNum[3];
+
+
 	Sound sound;
 	SoundEffect se;
+
+	DIFFICULTY difficulty;
+	TITLESTATE titleState;
+
+	DIFFICULTY difficultySelect[3];
+	bool ButtonMoveFlag;
 
 public:
 	//コンストラクタ
@@ -57,5 +98,7 @@ public:
 	void Update() override;
 	//描画
 	void Draw() override;
+
+	void DifficultySelect(DIFFICULTY dif1, DIFFICULTY dif2);
 
 };
