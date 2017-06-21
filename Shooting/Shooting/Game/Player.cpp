@@ -32,21 +32,33 @@ void Player::Initialize()
 	PlayerPos.y = 30.0f;
 	PlayerPos.z = 0.0f;
 
-	/*PlayerAngle.x = 0.0f;
-	PlayerAngle.y = 0.0f;
-	PlayerAngle.z = 0.0f;
-*/
-
 	PlayerYaw = PlayerPitch = 0.0f;
 
 	CameraPos.x = 0.0f;
-	CameraPos.y = 50.0f;
-	CameraPos.z = -60.0f;
+	CameraPos.y = 0.0f;
+	CameraPos.z = 0.0f;
 
 	CameraRel.x = 0.0f;
-	CameraRel.y = -4.0f;
-	CameraRel.z = 10.0f;
+	CameraRel.y = 0.0f;
+	CameraRel.z = 0.0f;
 
+
+	Direction.x = sin(PlayerYaw);
+	Direction.y = sin(PlayerPitch);
+	Direction.z = cos(PlayerYaw);
+
+	//自機に合わせたカメラの移動
+	CameraPos = PlayerPos + (Direction*-0.6 * 100);
+
+	//自機の方向に合わせたカメラの方向変換
+	CameraRel = Direction;
+
+	//座標の更新
+	camera.SetEyePoint(CameraPos);
+	//方向の更新
+	camera.SetRelLookAtPoint(CameraRel);
+
+	camera.UpdateViewMatrix();
 
 	right.x = cos(0);
 	right.y = 0;
@@ -91,9 +103,8 @@ void Player::Draw()
 			shot.BulletShot(ShotFlag);
 		}
 	}
-	PlayerObb.DrawLine();
 
-	shot.Draw();
+	PlayerObb.DrawLine();
 	stage.Draw();
 }
 

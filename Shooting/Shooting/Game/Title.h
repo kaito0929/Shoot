@@ -17,6 +17,9 @@
 #include "SoundEffect.h"
 
 
+#define BUTTON_MOVE_SPEED 20
+#define DIFFICULTY_NUM 3
+
 //難易度
 enum DIFFICULTY
 {
@@ -68,21 +71,32 @@ private:
 	//スペースキーを押したならtrueにする
 	bool FadeFlag;
 
-	//エンターキーの操作を促すフォントを点滅させるための変数
-	int EnterDrawCount;
-	int EnterFlashingNum;
+	//操作を促すフォントを点滅させるための変数
+	int DrawCount;
+	bool DrawFlag;
 
-	int ButtonMoveNum[3];
+	//ボタンのx座標
+	int ButtonMoveNum[DIFFICULTY_NUM];
+	//ボタン移動開始のフラグ
+	bool ButtonMoveFlag;
 
+	//選択してある難易度
+	DIFFICULTY difficulty;
+	//タイトル画面でのフロー
+	TITLESTATE titleState;
+
+	//代入用の変数
+	DIFFICULTY difficultySelect[DIFFICULTY_NUM];
 
 	Sound sound;
 	SoundEffect se;
 
-	DIFFICULTY difficulty;
-	TITLESTATE titleState;
-
-	DIFFICULTY difficultySelect[3];
-	bool ButtonMoveFlag;
+	//ボタンのサイズの標準
+	int ButtonSizeStandardX;
+	int ButtonSizeStandardY;
+	//ボタンのサイズの最大値
+	int ButtonSizeMaxX;
+	int ButtonSizeMaxY;
 
 public:
 	//コンストラクタ
@@ -98,5 +112,7 @@ public:
 	void Draw() override;
 
 	void DifficultySelect(DIFFICULTY dif1, DIFFICULTY dif2);
+
+	void PushKeyDraw();
 
 };

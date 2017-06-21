@@ -21,10 +21,6 @@
 #include "../Global.h"
 
 
-#define BUTTON_DRAW_SPEED 30
-#define BUTTON_DRAW_TIMING 0
-
-
 enum GAMEOVERSTATE
 {
 	FADE,
@@ -54,8 +50,6 @@ private:
 
 	GAMEOVERSTATE gameoverState;
 
-	int ButtonDrawCount;
-	bool ButtonDrawFlag;
 
 	//フェードアウトを実行するかのフラグ
 	//スペースキーを押したならtrueにする
@@ -80,6 +74,5 @@ public:
 	//描画
 	void Draw() override;
 
-	void ButtonDrawSet();
 
 };

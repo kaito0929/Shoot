@@ -16,6 +16,7 @@
 
 #include "Player.h"
 #include "Sound.h"
+#include "Easy.h"
 #include "../Global.h"
 
 class Normal : public BaseScene
@@ -24,10 +25,23 @@ private:
 
 	Player player;
 	Sound sound;
+	SoundEffect se;
 
 	//フェードアウト用のテクスチャ
 	Texture FadeTex;
 	Sprite FadeSprite;
+
+	//ゲーム開始の合図を行うテクスチャ
+	Texture StartTex;
+	Sprite StartSprite;
+
+	//スタートのテクスチャのx座標
+	int StartTexPosX;
+	//スタートの合図がしてからのインターバル
+	int StartCount;
+
+	PLAYSTATE playState;
+
 
 public:
 

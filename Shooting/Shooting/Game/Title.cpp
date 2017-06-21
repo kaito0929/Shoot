@@ -7,6 +7,8 @@
 #include "../DirectSound.h"
 #include "../SoundBuffer.h"
 
+//ゲームオーバー画面でのリトライを選んだ際に
+//遷移するシーンを決定するグローバル変数
 DIFFICULTY dif;
 
 Title::Title(ISceneChanger* changer) : BaseScene(changer)
@@ -37,14 +39,17 @@ void Title::Initialize()
 	FadeSprite.SetSize(1200, 1100);
 	FadeSprite.SetAlpha(0);
 
+	//イージー
 	EasyTex.Load("Material/easy.png");
 	EasySptite.SetPos(1400, 400);
 	EasySptite.SetSize(400, 130);
 
+	//ノーマル
 	NormalTex.Load("Material/normal.png");
 	NormalSptite.SetPos(1600, 600);
 	NormalSptite.SetSize(400, 130);
 
+	//ハード
 	HardTex.Load("Material/hard.png");
 	HardSptite.SetPos(1800, 800);
 	HardSptite.SetSize(400, 130);
@@ -53,6 +58,10 @@ void Title::Initialize()
 	ButtonMoveNum[1] = 1600;
 	ButtonMoveNum[2] = 1800;
 
+	ButtonSizeStandardX = 400;
+	ButtonSizeStandardY = 130;
+	ButtonSizeMaxX = 450;
+	ButtonSizeMaxY = 180;
 
 	sound.Initialize();
 	se.Initialize();
@@ -64,6 +73,9 @@ void Title::Initialize()
 	difficultySelect[1] = NORMAL;
 	difficultySelect[2] = HARD;
 
+
+	DrawCount = 0;
+	DrawFlag = true;
 
 	ButtonMoveFlag = false;
 }
@@ -78,7 +90,7 @@ void Title::Draw()
 
 	if (titleState == START)
 	{
-		if (EnterFlashingNum == 0)
+		if (DrawFlag == true)
 		{
 			//エンターキーを押すように指示
 			Direct3D::DrawSprite(EnterSprite, EnterTex);
@@ -104,63 +116,58 @@ void Title::Update()
 
 	sound.TitleSoundPlay();
 
-	//カウントをプラス
-	EnterDrawCount++;
-	//表示非表示をswitchで切り替える
-	switch (EnterFlashingNum)
-	{
-	case 0://テクスチャの表示
-		if (EnterDrawCount % 30 == 0)
-		{
-			EnterFlashingNum = 1;
-		}
-		break;
-	case 1://テクスチャの非表示
-		if (EnterDrawCount % 30 == 0)
-		{
-			EnterFlashingNum = 0;
-		}
-		break;
-	}
-
 	switch (titleState)
 	{
-	case START:
+	case START:		//スペースキーを押すように指示
+
+		PushKeyDraw();
+
+		//スペースキーを押したら処理
 		if (pDi->KeyJustPressed(DIK_SPACE))
 		{
 			titleState = BUTTONMOVE;
 			se.DecisionSEPlay();
 		}
-		break;
-	case BUTTONMOVE:
 
-		for (int i = 0; i < 3; i++)
+		break;
+	case BUTTONMOVE:	//ボタンを移動させる
+
+		//三つのボタンの位置が画面中央に移動するように処理
+		for (int i = 0; i < DIFFICULTY_NUM; i++)
 		{
-			if (ButtonMoveNum[i] != 600)
+			if (ButtonMoveNum[i] != SCREEN_CENTERX)
 			{
-				ButtonMoveNum[i] -= 20;
+				ButtonMoveNum[i] -= BUTTON_MOVE_SPEED;
 				ButtonMoveFlag = false;
 			}
 			else
 			{
+				//ボタンの移動が完了したフラグ
 				ButtonMoveFlag = true;
 			}
 		}
 
+		//ボタンの移動が完了したフラグがtrueになれば処理
 		if (ButtonMoveFlag == true)
 		{
+			//難易度選択へ
 			titleState = SELECT;
 		}
 
 		break;
-	case SELECT:
+	case SELECT:	//難易度選択
 
+		//選択している難易度によってボタンのサイズを変えたり
+		//遷移するシーンを変更する
 		switch (difficulty)
 		{
-		case EASY:
-			EasySptite.SetSize(450, 180);
-			NormalSptite.SetSize(400, 130);
-			HardSptite.SetSize(400, 130);
+		case EASY:		//イージーモード
+
+			//イージーモードを選択しているボタンのサイズを大きく
+			EasySptite.SetSize(ButtonSizeMaxX, ButtonSizeMaxY);
+			//他のボタンは標準サイズの変更しておく
+			NormalSptite.SetSize(ButtonSizeStandardX, ButtonSizeStandardY);
+			HardSptite.SetSize(ButtonSizeStandardX, ButtonSizeStandardY);
 
 			DifficultySelect(difficultySelect[2], difficultySelect[1]);
 			dif = EASY;
@@ -173,10 +180,13 @@ void Title::Update()
 			}
 
 			break;
-		case NORMAL:
-			EasySptite.SetSize(400, 130);
-			NormalSptite.SetSize(450, 180);
-			HardSptite.SetSize(400, 130);
+		case NORMAL:		//ノーマルモード
+
+			//ノーマルモードを選択しているボタンのサイズを大きく
+			NormalSptite.SetSize(ButtonSizeMaxX, ButtonSizeMaxY);
+			//他のボタンは標準サイズの変更しておく
+			EasySptite.SetSize(ButtonSizeStandardX, ButtonSizeStandardY);
+			HardSptite.SetSize(ButtonSizeStandardX, ButtonSizeStandardY);
 
 			DifficultySelect(difficultySelect[0], difficultySelect[2]);
 			dif = NORMAL;
@@ -189,10 +199,13 @@ void Title::Update()
 			}
 
 			break;
-		case HARD:
-			EasySptite.SetSize(400, 130);
-			NormalSptite.SetSize(400, 130);
-			HardSptite.SetSize(450, 180);
+		case HARD:		//ハードモード
+
+			//ハードモードを選択しているボタンのサイズを大きく
+			HardSptite.SetSize(ButtonSizeMaxX, ButtonSizeMaxY);
+			//他のボタンは標準サイズの変更しておく
+			EasySptite.SetSize(ButtonSizeStandardX, ButtonSizeStandardY);
+			NormalSptite.SetSize(ButtonSizeStandardX, ButtonSizeStandardY);
 			
 			DifficultySelect(difficultySelect[1], difficultySelect[0]);
 			dif = HARD;
@@ -203,21 +216,22 @@ void Title::Update()
 				sound.TitleSoundStop();
 				mSceneChanger->ChangeScene(STATE_HARD);
 			}
-
 			break;
 		}
 
+		//難易度選択してスペースキーを押したらフェードアウト開始
 		if (pDi->KeyJustPressed(DIK_SPACE))
 		{
-			FadeFlag = true;
-			se.DecisionSEPlay();
+			if (FadeFlag == false)
+			{
+				FadeFlag = true;
+				se.DecisionSEPlay();
+			}
 		}
 
 
 		break;
 	}
-
-
 
 	//FadeFlagがtrueなら実行するように
 	if (FadeFlag == true)
@@ -229,23 +243,50 @@ void Title::Update()
 }
 
 
+//難易度選択を処理する関数
 void Title::DifficultySelect(DIFFICULTY dif1, DIFFICULTY dif2)
 {
 	DirectInput* pDi = DirectInput::GetInstance();
 
+	//フェードアウトが開始していなければ処理
 	if (FadeFlag == false)
 	{
+		//上キーを押したらその上の難易度に代入
 		if (pDi->KeyJustPressed(DIK_UP))
 		{
 			difficulty = dif1;
 			se.ChoiceSEPlay();
 		}
 
+		//下キーを押したらその下の難易度に代入
 		if (pDi->KeyJustPressed(DIK_DOWN))
 		{
 			difficulty = dif2;
 			se.ChoiceSEPlay();
 		}
 	}
+}
 
+//テクスチャを点滅させるための処理
+void Title::PushKeyDraw()
+{
+	//カウントをプラス
+	DrawCount++;
+
+	//フラグをtrueとfalseに切り替えることによって
+	//テクスチャの表示非表示を切り替えていく
+	if (DrawFlag == false)
+	{
+		if (DrawCount % TEXTURE_DARW_SPEED == TEXTURE_DARW_TIMING)
+		{
+			DrawFlag = true;
+		}
+	}
+	else
+	{
+		if (DrawCount % TEXTURE_DARW_SPEED == TEXTURE_DARW_TIMING)
+		{
+			DrawFlag = false;
+		}
+	}
 }

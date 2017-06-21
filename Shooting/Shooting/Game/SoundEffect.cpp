@@ -36,6 +36,9 @@ void SoundEffect::Initialize()
 	PlayerHitSE.Load("Sound/playerHit.wav");
 	sb_PlayerHitSE.Create(PlayerHitSE);
 
+	StartSE.Load("Sound/start.wav");
+	sb_StartSE.Create(StartSE);
+
 	for (int i = 0; i < 10; i++)
 	{
 		sb_DicisionSE[i].Create(DecisionSE);
@@ -106,4 +109,9 @@ void SoundEffect::ShotHitSEPlay()
 void SoundEffect::PlayerHitSEPlay()
 {
 	sb_PlayerHitSE.Play(false);
+}
+
+void SoundEffect::StartSEPlay()
+{
+	sb_StartSE.Play(false);
 }

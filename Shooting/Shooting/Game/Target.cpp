@@ -96,7 +96,11 @@ void EasyTarget::EasyTargetDraw()
 		{
 			TargetModel.Draw(mat_transform, mat_scale, mat_rotate);
 		}
+
+		EasyTargetObb[i].DrawLine();
 	}
+
+	
 }
 
 //ターゲットとの当たり判定を行う関数
@@ -251,7 +255,7 @@ void HardTarget::HardTargetInitialize()
 {
 	TargetModel.Load("Model/target.x");
 
-	HardTargetPos[0].x = 0.0f;
+	HardTargetPos[0].x = 50.0f;
 	HardTargetPos[0].y = 30.0f;
 	HardTargetPos[0].z = -30.0f;
 

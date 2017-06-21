@@ -28,7 +28,7 @@ void Result::Initialize()
 	//スペースキーを押すように指示するテクスチャ
 	EnterTex.Load("Material/pushspace.png");
 	EnterSprite.SetPos(600, 700);
-	EnterSprite.SetSize(600, 400);
+	EnterSprite.SetSize(650, 450);
 
 	//フェードアウト用のテクスチャ
 	FadeTex.Load("Material/fade_b.png");
@@ -46,9 +46,9 @@ void Result::Draw()
 
 	Direct3D::DrawSprite(ResultSprite, ResultTex);
 
-	if (EnterFlashingNum == 0)
+	if (DrawFlag == true)
 	{
-		//エンターキーを押すように指示
+		//スペースキーを押すように指示
 		Direct3D::DrawSprite(EnterSprite, EnterTex);
 	}
 
@@ -63,29 +63,8 @@ void Result::Update()
 
 	sound.ClearSoundPlay();
 
-	//==■エンターキーを押すように指示を出すテクスチャを点滅させる■====================================
-	//カウントをプラス
-	EnterDrawCount++;
-	//表示非表示をswitchで切り替える
-	switch (EnterFlashingNum)
-	{
-	case 0://テクスチャの表示
-		if (EnterDrawCount % 30 == 0)
-		{
-			EnterFlashingNum = 1;
-		}
-		break;
-	case 1://テクスチャの非表示
-		if (EnterDrawCount % 30 == 0)
-		{
-			EnterFlashingNum = 0;
-		}
-		break;
-	}
-	//==================================================================================================
-
 	//エンターキーを押したならフラグをtrueにしてフェードアウト開始
-	if (pDi->KeyJustPressed(DIK_RETURN))
+	if (pDi->KeyJustPressed(DIK_SPACE))
 	{
 		if (FadeFlag == false)
 		{
@@ -97,13 +76,39 @@ void Result::Update()
 	//FadeFlagがtrueなら実行するように
 	if (FadeFlag == true)
 	{
-		FadeSprite.SetAlpha(FadeSprite.GetAlpha() + (0.01f*FADE_OUT_CHANGENUM));
+		FadeSprite.SetAlpha(FadeSprite.GetAlpha() + (FADE_SPEED*FADE_OUT_CHANGENUM));
 	}
 
 	//完全に画面が暗くなったならシーンをメインゲームに変更
-	if (FadeSprite.GetAlpha() == 1)
+	if (FadeSprite.GetAlpha() == FADE_OUT_END)
 	{
 		sound.ClearSoundStop();
 		mSceneChanger->ChangeScene(STATE_TITLE);
 	}
+
+	TextureFlashing();
+}
+
+void Result::TextureFlashing()
+{
+	//カウントをプラス
+	DrawCount++;
+
+	//フラグのtrue,falseを切り替えることによって
+	//テクスチャの表示非表示を切り替える
+	if (DrawFlag == false)
+	{
+		if (DrawCount % TEXTURE_DARW_SPEED == TEXTURE_DARW_TIMING)
+		{
+			DrawFlag = true;
+		}
+	}
+	else
+	{
+		if (DrawCount % TEXTURE_DARW_SPEED == TEXTURE_DARW_TIMING)
+		{
+			DrawFlag = false;
+		}
+	}
+
 }

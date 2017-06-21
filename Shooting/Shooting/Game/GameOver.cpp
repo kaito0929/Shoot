@@ -41,9 +41,6 @@ void GameOver::Initialize()
 	FadeSprite.SetSize(1200, 1100);
 	FadeSprite.SetAlpha(1);
 
-	ButtonDrawCount = 0;
-	ButtonDrawFlag = true;
-
 	FadeFlag = false;
 
 	gameoverState = FADE;
@@ -57,24 +54,8 @@ void GameOver::Draw()
 {
 	Direct3D::DrawSprite(GameOverSprite, GameOverTex);
 
-	//ボタンを点滅させるための処理
-	switch (gameoverState)
-	{
-	case RETRY:
-		if (ButtonDrawFlag == true)
-		{
-			Direct3D::DrawSprite(RetrySptite, RetryTex);
-		}
-		Direct3D::DrawSprite(TitleGoSprite, TitleGoTex);
-		break;
-	case TITLEGO:
-		if (ButtonDrawFlag == true)
-		{
-			Direct3D::DrawSprite(TitleGoSprite, TitleGoTex);
-		}
-		Direct3D::DrawSprite(RetrySptite, RetryTex);
-		break;
-	}
+	Direct3D::DrawSprite(RetrySptite, RetryTex);
+	Direct3D::DrawSprite(TitleGoSprite, TitleGoTex);
 
 	//フェードイン、アウト用の画像を描画
 	Direct3D::DrawSprite(FadeSprite, FadeTex);
@@ -105,8 +86,9 @@ void GameOver::Update()
 
 	case RETRY:	//同じ難易度で再開
 
-		//ボタンを点滅させるためのカウント
-		ButtonDrawCount++;
+		//ボタンのサイズを変更
+		RetrySptite.SetSize(350, 250);
+		TitleGoSprite.SetSize(300, 200);
 
 		//再開か、タイトルへ移動か決定してなければ処理
 		//どちらにするか選択するか決定したりする
@@ -144,7 +126,6 @@ void GameOver::Update()
 				mSceneChanger->ChangeScene(STATE_HARD);
 				break;
 			}
-
 		}
 
 		break;
@@ -154,7 +135,8 @@ void GameOver::Update()
 		//基本的な流れは上記と一緒の為
 		//コメントは上記を参照してください
 
-		ButtonDrawCount++;
+		RetrySptite.SetSize(300, 200);
+		TitleGoSprite.SetSize(350, 250);
 
 		if (FadeFlag == false)
 		{
@@ -188,26 +170,6 @@ void GameOver::Update()
 		FadeSprite.SetAlpha(FadeSprite.GetAlpha() + (FADE_SPEED*FADE_OUT_CHANGENUM));
 	}
 
-	ButtonDrawSet();
 
 }
 
-//再開か、タイトルへかのボタンの表示非表示を切り替える関数
-void GameOver::ButtonDrawSet()
-{
-	if (ButtonDrawFlag == false)
-	{
-		if (ButtonDrawCount % BUTTON_DRAW_SPEED == BUTTON_DRAW_TIMING)
-		{
-			ButtonDrawFlag = true;
-		}
-	}
-	else
-	{
-		if (ButtonDrawCount % BUTTON_DRAW_SPEED == BUTTON_DRAW_TIMING)
-		{
-			ButtonDrawFlag = false;
-		}
-	}
-
-}

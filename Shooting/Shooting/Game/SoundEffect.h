@@ -29,6 +29,10 @@ private:
 	WaveFile PlayerHitSE;
 	SoundBuffer sb_PlayerHitSE;
 
+	//ゲームスタートの合図
+	WaveFile StartSE;
+	SoundBuffer sb_StartSE;
+
 public:
 	SoundEffect();
 	~SoundEffect();
@@ -46,5 +50,6 @@ public:
 	void ShotHitSEPlay();
 	//自機が何かと衝突した時に効果音を鳴らす関数
 	void PlayerHitSEPlay();
-
+	//ゲームスタートの合図の音を鳴らす関数
+	void StartSEPlay();
 };

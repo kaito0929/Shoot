@@ -154,6 +154,11 @@ void Stage::Initialize()
 void Stage::Draw()
 {
 	BackGround.Draw(mat_transform, mat_scale, mat_rotate);
+
+	for (int i = 0; i < 6; i++)
+	{
+		StageObb[i].DrawLine();
+	}
 }
 
 
@@ -172,7 +177,7 @@ bool Stage::StageCollision(OrientedBoundingBox obb)
 {
 	for (int i = 0; i < STAGE_COLLNUM; i++)
 	{
-		if (OrientedBoundingBox::Collision(obb, StageObb[i]))
+		if (OrientedBoundingBox::Collision(StageObb[i], obb))
 		{
 			return true;
 		}

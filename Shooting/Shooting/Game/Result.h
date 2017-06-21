@@ -14,9 +14,7 @@
 
 #include "Sound.h"
 #include "SoundEffect.h"
-
-//フェードアウト用の数値
-#define FADE_OUT_CHANGENUM 1 
+#include "../Global.h"
 
 
 class Result : public BaseScene
@@ -40,8 +38,8 @@ private:
 	bool FadeFlag;
 
 	//エンターキーの操作を促すフォントを点滅させるための変数
-	int EnterDrawCount;
-	int EnterFlashingNum;
+	int DrawCount;
+	bool DrawFlag;
 
 	Sound sound;
 	SoundEffect se;
@@ -58,4 +56,6 @@ public:
 	void Update() override;
 	//描画
 	void Draw() override;
+
+	void TextureFlashing();
 };
