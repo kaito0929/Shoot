@@ -50,12 +50,18 @@ void Shot::Initialize()
 
 void Shot::Draw()
 {
-
+	for (int i = 0; i < SHOTNUM; i++)
+	{
+		bulletObb[i].DrawLine();
+	}
 }
 
 void Shot::Update()
 {
-
+	for (int i = 0; i < SHOTNUM; i++)
+	{
+		bulletObb[i].UpdateInfo(BulletPos[i], forward, right, up);
+	}
 }
 
 void Shot::BulletShot(bool shotFlag[SHOTNUM])
@@ -75,15 +81,13 @@ void Shot::BulletShot(bool shotFlag[SHOTNUM])
 
 
 //’e‚Ì”­ŽËˆÊ’u‚ðÝ’è‚·‚éŠÖ”
-void Shot::ShotPosSet(D3DXVECTOR3 pPos, float yaw, float pitch, bool shotFlag[SHOTNUM])
+void Shot::ShotPosSet(D3DXVECTOR3 pPos, D3DXVECTOR3 dir, bool shotFlag[SHOTNUM])
 {
 	for (int i = 0; i < SHOTNUM; i++)
 	{
 		if (shotFlag[i] == true)
 		{
-			BulletPos[i].x += sin(BulletAngle[i].x)*SHOTSPEED;
-			BulletPos[i].y += sin(BulletAngle[i].y)*SHOTSPEED;
-			BulletPos[i].z += cos(BulletAngle[i].z)*SHOTSPEED;
+			BulletPos[i] += BulletAngle[i]*SHOTSPEED;
 
 			//³–Ê	
 			forward.x = cos(-BulletAngle[i].x + (D3DX_PI / 2));
@@ -94,22 +98,12 @@ void Shot::ShotPosSet(D3DXVECTOR3 pPos, float yaw, float pitch, bool shotFlag[SH
 			right.x = cos(-BulletAngle[i].x);
 			right.y = 0;
 			right.z = sin(-BulletAngle[i].z);
-
-			bulletObb[i].UpdateInfo(BulletPos[i], forward, right, up);
 		}
 		else
 		{
-			BulletAngle[i].x = yaw;
-			BulletAngle[i].y = pitch;
-			BulletAngle[i].z = yaw;
+			BulletAngle[i] = dir;
 
-
-			BulletPos[i].x = pPos.x + sin(BulletAngle[i].x)*30.0f;
-			BulletPos[i].y = pPos.y + sin(BulletAngle[i].y)*50.0f;
-			BulletPos[i].z = pPos.z + cos(BulletAngle[i].z)*30.0f;
-
-			bulletObb[i].UpdateInfo(BulletPos[i], forward, right, up);
-
+			BulletPos[i] = pPos + dir*30.0f;
 		}
 	}
 }

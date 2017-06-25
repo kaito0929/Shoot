@@ -48,7 +48,9 @@ void Player::Initialize()
 	Direction.z = cos(PlayerYaw);
 
 	//自機に合わせたカメラの移動
-	CameraPos = PlayerPos + (Direction*-0.6 * 100);
+	CameraPos.x = PlayerPos.x + (Direction.x*-0.6 * 100);
+	CameraPos.y = (PlayerPos.y+20.0f) + (Direction.y*-0.6 * 100);
+	CameraPos.z = PlayerPos.z + (Direction.z*-0.6 * 100);
 
 	//自機の方向に合わせたカメラの方向変換
 	CameraRel = Direction;
@@ -104,8 +106,8 @@ void Player::Draw()
 		}
 	}
 
-	PlayerObb.DrawLine();
 	stage.Draw();
+	shot.Draw();
 }
 
 void Player::Update()
@@ -121,7 +123,7 @@ void Player::Update()
 		PlayerObbUpdate();
 	}
 
-	shot.ShotPosSet(PlayerPos, PlayerYaw,PlayerPitch, ShotFlag);
+	shot.ShotPosSet(PlayerPos, Direction, ShotFlag);
 
 
 	if (ShotNum == SHOTNUM)
@@ -197,9 +199,10 @@ void Player::PlayerMoveControl()
 //カメラの動きの制御
 void Player::CameraControl()
 {
-
 	//自機に合わせたカメラの移動
-	CameraPos = PlayerPos + (Direction*-0.6 * 100);
+	CameraPos.x = PlayerPos.x + (Direction.x*-0.6 * 100);
+	CameraPos.y = (PlayerPos.y + 20.0f) + (Direction.y*-0.6 * 100);
+	CameraPos.z = PlayerPos.z + (Direction.z*-0.6 * 100);
 
 	//自機の方向に合わせたカメラの方向変換
 	CameraRel = Direction;
@@ -257,8 +260,11 @@ void Player::EasyUpdate()
 	//ステージとプレイヤーの当たり判定を処理する
 	if (stage.StageCollision(PlayerObb) == true || easyTarget.EasyTargetColl(PlayerObb) == true)
 	{
+		if (PlayerAliveFlag == true)
+		{
+			se.PlayerHitSEPlay();
+		}
 		PlayerAliveFlag = false;
-		se.PlayerHitSEPlay();
 	}
 
 
@@ -305,8 +311,12 @@ void Player::NormalUpdate()
 	//ステージとプレイヤーの当たり判定を処理する
 	if (stage.StageCollision(PlayerObb) == true || normalTarget.NormalTargetColl(PlayerObb) == true)
 	{
+		if (PlayerAliveFlag == true)
+		{
+			se.PlayerHitSEPlay();
+		}
 		PlayerAliveFlag = false;
-		se.PlayerHitSEPlay();
+		
 	}
 
 
@@ -354,8 +364,12 @@ void Player::HardUpdate()
 	//ステージとプレイヤーの当たり判定を処理する
 	if (stage.StageCollision(PlayerObb) == true || hardTarget.HardTargetColl(PlayerObb) == true)
 	{
+		if (PlayerAliveFlag == true)
+		{
+			se.PlayerHitSEPlay();
+		}
 		PlayerAliveFlag = false;
-		se.PlayerHitSEPlay();
+		
 	}
 
 

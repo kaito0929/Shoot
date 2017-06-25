@@ -143,7 +143,7 @@ void Stage::Initialize()
 	//---------------------------------------------------------------------------
 
 
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < STAGE_COLLNUM; i++)
 	{
 		StageObb[i].SetLength(200, 200, 200);
 		StageObb[i].UpdateInfo(pos[i], forward[i], right[i], up[i]);
@@ -155,7 +155,7 @@ void Stage::Draw()
 {
 	BackGround.Draw(mat_transform, mat_scale, mat_rotate);
 
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < STAGE_COLLNUM; i++)
 	{
 		StageObb[i].DrawLine();
 	}
@@ -164,7 +164,7 @@ void Stage::Draw()
 
 void Stage::Update()
 {
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < STAGE_COLLNUM; i++)
 	{
 		StageObb[i].UpdateInfo(pos[i], forward[i], right[i], up[i]);
 	}
@@ -177,9 +177,11 @@ bool Stage::StageCollision(OrientedBoundingBox obb)
 {
 	for (int i = 0; i < STAGE_COLLNUM; i++)
 	{
-		if (OrientedBoundingBox::Collision(StageObb[i], obb))
+		if (OrientedBoundingBox::Collision(obb,StageObb[i]))
 		{
 			return true;
 		}
 	}
+
+	return false;
 }

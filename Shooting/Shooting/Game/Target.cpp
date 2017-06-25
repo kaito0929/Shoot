@@ -97,9 +97,7 @@ void EasyTarget::EasyTargetDraw()
 			TargetModel.Draw(mat_transform, mat_scale, mat_rotate);
 		}
 
-		EasyTargetObb[i].DrawLine();
 	}
-
 	
 }
 
@@ -112,13 +110,15 @@ bool EasyTarget::EasyTargetColl(OrientedBoundingBox obb)
 	{
 		if (EasyTargetExistenceFlag[i] == true)
 		{
-			if (OrientedBoundingBox::Collision(EasyTargetObb[i], obb))
+			if (OrientedBoundingBox::Collision(obb, EasyTargetObb[i]))
 			{
 				EasyTargetExistenceFlag[i] = false;
 				return true;
 			}
 		}
 	}
+
+	return false;
 }
 
 //=====================================================
@@ -234,6 +234,8 @@ bool NormalTarget::NormalTargetColl(OrientedBoundingBox obb)
 			}
 		}
 	}
+
+	return false;
 }
 
 //=====================================================
@@ -369,4 +371,6 @@ bool HardTarget::HardTargetColl(OrientedBoundingBox obb)
 			}
 		}
 	}
+
+	return false;
 }
